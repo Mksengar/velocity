@@ -1,0 +1,1276 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Users - Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #272733;
+            padding: 25px 15px;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #f5c842;
+            padding: 0 15px 30px;
+        }
+
+        .logo span {
+            color: #ffffff;
+        }
+
+        .menu-title {
+            color: #777784;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin: 20px 15px 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #aaaab5;
+            padding: 13px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1c1c25;
+            color: #f5c842;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #888894;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #f5c842;
+            color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #111118;
+            border: 1px solid #272733;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-card p {
+            color: #888894;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 28px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: #111118;
+            border: 1px solid #272733;
+            padding: 18px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #191921;
+            color: #ffffff;
+            border: 1px solid #30303b;
+            border-radius: 8px;
+            padding: 12px 15px 12px 40px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #f5c842;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 11px;
+            color: #777784;
+        }
+
+        select {
+            background: #191921;
+            color: #ffffff;
+            border: 1px solid #30303b;
+            border-radius: 8px;
+            padding: 12px 15px;
+            outline: none;
+        }
+
+        .add-btn {
+            background: #f5c842;
+            color: #111111;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .add-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* Table */
+        .table-container {
+            background: #111118;
+            border: 1px solid #272733;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 17px 18px;
+            text-align: left;
+            border-bottom: 1px solid #272733;
+        }
+
+        th {
+            color: #888894;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #17171f;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #252530;
+            color: #f5c842;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            color: #777784;
+            font-size: 12px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .active-badge {
+            background: rgba(50, 205, 100, 0.12);
+            color: #52d47a;
+        }
+
+        .inactive-badge {
+            background: rgba(255, 90, 90, 0.12);
+            color: #ff7070;
+        }
+
+        .admin-badge {
+            background: rgba(245, 200, 66, 0.12);
+            color: #f5c842;
+        }
+
+        .user-badge {
+            background: rgba(90, 150, 255, 0.12);
+            color: #70a7ff;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-btn {
+            border: 1px solid #30303b;
+            background: #191921;
+            color: #aaaab5;
+            border-radius: 6px;
+            padding: 7px 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            color: #f5c842;
+            border-color: #f5c842;
+        }
+
+        .delete-btn:hover {
+            color: #ff7070;
+            border-color: #ff7070;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            color: #888894;
+            font-size: 13px;
+        }
+
+        .page-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            background: #191921;
+            border: 1px solid #30303b;
+            color: #aaaab5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .page-btn.active {
+            background: #f5c842;
+            color: #111;
+            border-color: #f5c842;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            width: 420px;
+            max-width: 90%;
+            background: #111118;
+            border: 1px solid #30303b;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            font-size: 25px;
+            color: #777784;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #aaaab5;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+        }
+
+        .save-btn {
+            width: 100%;
+            background: #f5c842;
+            color: #111;
+            border: none;
+            border-radius: 8px;
+            padding: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                font-size: 18px;
+                padding: 0 8px 25px;
+            }
+
+            .logo span,
+            .nav-link span,
+            .menu-title {
+                display: none;
+            }
+
+            .nav-link {
+                justify-content: center;
+                padding: 13px 8px;
+            }
+
+            .main {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
+
+            .admin-profile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 15px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            select,
+            .add-btn {
+                width: 100%;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="menu-title">Admin Panel</div>
+
+        <a href="admin-dashboard.html" class="nav-link">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-link active">
+            <span class="nav-icon">👥</span>
+            <span>Users</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <span class="nav-icon">📁</span>
+            <span>Datasets</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Reports</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+
+        <div class="menu-title">Account</div>
+
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🚪</span>
+            <span>Logout</span>
+        </a>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Topbar -->
+        <div class="topbar">
+
+            <div class="page-title">
+                <h1>User Management</h1>
+                <p>Manage Velocity BI users and their account access.</p>
+            </div>
+
+            <div class="admin-profile">
+                <div>
+                    <strong>Admin</strong>
+                    <p style="color:#777784;font-size:12px;">Administrator</p>
+                </div>
+
+                <div class="admin-avatar">A</div>
+            </div>
+
+        </div>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Users</p>
+                <h2 id="totalUsers">1,248</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Active Users</p>
+                <h2 id="activeUsers">1,102</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Inactive Users</p>
+                <h2 id="inactiveUsers">146</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>New This Month</p>
+                <h2>84</h2>
+            </div>
+
+        </section>
+
+
+        <!-- User Management -->
+        <section>
+
+            <div class="toolbar">
+
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search users by name or email..."
+                        onkeyup="searchUsers()"
+                    >
+                </div>
+
+                <select id="statusFilter" onchange="filterUsers()">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+                <select id="roleFilter" onchange="filterUsers()">
+                    <option value="all">All Roles</option>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+
+                <button class="add-btn" onclick="openAddUserModal()">
+                    + Add User
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Datasets</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="userTable">
+
+                        <tr data-name="Rahul Sharma"
+                            data-email="rahul@example.com"
+                            data-status="active"
+                            data-role="user">
+
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar">RS</div>
+
+                                    <div>
+                                        <div class="user-name">Rahul Sharma</div>
+                                        <div class="user-email">
+                                            rahul@example.com
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge user-badge">User</span>
+                            </td>
+
+                            <td>
+                                <span class="badge active-badge">Active</span>
+                            </td>
+
+                            <td>24</td>
+
+                            <td>12 Sep 2026</td>
+
+                            <td>
+                                <div class="actions">
+                                    <button class="action-btn"
+                                            onclick="editUser('Rahul Sharma')">
+                                        ✏️
+                                    </button>
+
+                                    <button class="action-btn delete-btn"
+                                            onclick="deleteUser(this, 'Rahul Sharma')">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                        <tr data-name="Priya Patel"
+                            data-email="priya@example.com"
+                            data-status="active"
+                            data-role="user">
+
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar">PP</div>
+
+                                    <div>
+                                        <div class="user-name">Priya Patel</div>
+                                        <div class="user-email">
+                                            priya@example.com
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge user-badge">User</span>
+                            </td>
+
+                            <td>
+                                <span class="badge active-badge">Active</span>
+                            </td>
+
+                            <td>18</td>
+
+                            <td>08 Sep 2026</td>
+
+                            <td>
+                                <div class="actions">
+                                    <button class="action-btn"
+                                            onclick="editUser('Priya Patel')">
+                                        ✏️
+                                    </button>
+
+                                    <button class="action-btn delete-btn"
+                                            onclick="deleteUser(this, 'Priya Patel')">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                        <tr data-name="Amit Kumar"
+                            data-email="amit@example.com"
+                            data-status="inactive"
+                            data-role="user">
+
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar">AK</div>
+
+                                    <div>
+                                        <div class="user-name">Amit Kumar</div>
+                                        <div class="user-email">
+                                            amit@example.com
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge user-badge">User</span>
+                            </td>
+
+                            <td>
+                                <span class="badge inactive-badge">Inactive</span>
+                            </td>
+
+                            <td>7</td>
+
+                            <td>02 Sep 2026</td>
+
+                            <td>
+                                <div class="actions">
+                                    <button class="action-btn"
+                                            onclick="editUser('Amit Kumar')">
+                                        ✏️
+                                    </button>
+
+                                    <button class="action-btn delete-btn"
+                                            onclick="deleteUser(this, 'Amit Kumar')">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                        <tr data-name="Neha Singh"
+                            data-email="neha@example.com"
+                            data-status="active"
+                            data-role="admin">
+
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar">NS</div>
+
+                                    <div>
+                                        <div class="user-name">Neha Singh</div>
+                                        <div class="user-email">
+                                            neha@example.com
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge admin-badge">Admin</span>
+                            </td>
+
+                            <td>
+                                <span class="badge active-badge">Active</span>
+                            </td>
+
+                            <td>42</td>
+
+                            <td>25 Aug 2026</td>
+
+                            <td>
+                                <div class="actions">
+                                    <button class="action-btn"
+                                            onclick="editUser('Neha Singh')">
+                                        ✏️
+                                    </button>
+
+                                    <button class="action-btn delete-btn"
+                                            onclick="deleteUser(this, 'Neha Singh')">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+
+                        <tr data-name="Rohit Verma"
+                            data-email="rohit@example.com"
+                            data-status="active"
+                            data-role="user">
+
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar">RV</div>
+
+                                    <div>
+                                        <div class="user-name">Rohit Verma</div>
+                                        <div class="user-email">
+                                            rohit@example.com
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge user-badge">User</span>
+                            </td>
+
+                            <td>
+                                <span class="badge active-badge">Active</span>
+                            </td>
+
+                            <td>31</td>
+
+                            <td>19 Aug 2026</td>
+
+                            <td>
+                                <div class="actions">
+                                    <button class="action-btn"
+                                            onclick="editUser('Rohit Verma')">
+                                        ✏️
+                                    </button>
+
+                                    <button class="action-btn delete-btn"
+                                            onclick="deleteUser(this, 'Rohit Verma')">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- Pagination -->
+                <div class="pagination">
+
+                    <span>Showing 1–5 of 1,248 users</span>
+
+                    <div class="page-buttons">
+
+                        <button class="page-btn">‹</button>
+
+                        <button class="page-btn active">1</button>
+
+                        <button class="page-btn">2</button>
+
+                        <button class="page-btn">3</button>
+
+                        <button class="page-btn">4</button>
+
+                        <button class="page-btn">5</button>
+
+                        <button class="page-btn">›</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Add User Modal -->
+    <div class="modal" id="userModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>Add New User</h2>
+
+                <span class="close" onclick="closeModal()">×</span>
+
+            </div>
+
+            <form onsubmit="addUser(event)">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input
+                        type="text"
+                        id="newName"
+                        placeholder="Enter full name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        id="newEmail"
+                        placeholder="Enter email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Role</label>
+
+                    <select id="newRole">
+
+                        <option value="user">
+                            User
+                        </option>
+
+                        <option value="admin">
+                            Admin
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+
+                    <select id="newStatus">
+
+                        <option value="active">
+                            Active
+                        </option>
+
+                        <option value="inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+                </div>
+
+                <button class="save-btn" type="submit">
+                    Add User
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* Open Modal */
+        function openAddUserModal() {
+            document.getElementById("userModal").style.display = "flex";
+        }
+
+
+        /* Close Modal */
+        function closeModal() {
+            document.getElementById("userModal").style.display = "none";
+        }
+
+
+        /* Add User */
+        function addUser(event) {
+
+            event.preventDefault();
+
+            const name =
+                document.getElementById("newName").value;
+
+            const email =
+                document.getElementById("newEmail").value;
+
+            const role =
+                document.getElementById("newRole").value;
+
+            const status =
+                document.getElementById("newStatus").value;
+
+            const initials =
+                name
+                    .split(" ")
+                    .map(word => word[0])
+                    .join("")
+                    .substring(0, 2)
+                    .toUpperCase();
+
+            const roleClass =
+                role === "admin"
+                    ? "admin-badge"
+                    : "user-badge";
+
+            const statusClass =
+                status === "active"
+                    ? "active-badge"
+                    : "inactive-badge";
+
+            const roleText =
+                role.charAt(0).toUpperCase() +
+                role.slice(1);
+
+            const statusText =
+                status.charAt(0).toUpperCase() +
+                status.slice(1);
+
+            const table =
+                document.getElementById("userTable");
+
+            const row =
+                document.createElement("tr");
+
+            row.setAttribute("data-name", name);
+            row.setAttribute("data-email", email);
+            row.setAttribute("data-status", status);
+            row.setAttribute("data-role", role);
+
+            row.innerHTML = `
+
+                <td>
+                    <div class="user-info">
+
+                        <div class="user-avatar">
+                            ${initials}
+                        </div>
+
+                        <div>
+                            <div class="user-name">
+                                ${name}
+                            </div>
+
+                            <div class="user-email">
+                                ${email}
+                            </div>
+                        </div>
+
+                    </div>
+                </td>
+
+                <td>
+                    <span class="badge ${roleClass}">
+                        ${roleText}
+                    </span>
+                </td>
+
+                <td>
+                    <span class="badge ${statusClass}">
+                        ${statusText}
+                    </span>
+                </td>
+
+                <td>0</td>
+
+                <td>19 Sep 2026</td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="action-btn"
+                            onclick="editUser('${name}')">
+                            ✏️
+                        </button>
+
+                        <button
+                            class="action-btn delete-btn"
+                            onclick="deleteUser(this, '${name}')">
+                            🗑️
+                        </button>
+
+                    </div>
+
+                </td>
+            `;
+
+            table.appendChild(row);
+
+            closeModal();
+
+            document.getElementById("newName").value = "";
+            document.getElementById("newEmail").value = "";
+
+            alert("User added successfully!");
+
+        }
+
+
+        /* Search Users */
+        function searchUsers() {
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase();
+
+            const rows =
+                document.querySelectorAll("#userTable tr");
+
+            rows.forEach(row => {
+
+                const name =
+                    row.dataset.name.toLowerCase();
+
+                const email =
+                    row.dataset.email.toLowerCase();
+
+                if (
+                    name.includes(search) ||
+                    email.includes(search)
+                ) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+
+            });
+
+        }
+
+
+        /* Filter Users */
+        function filterUsers() {
+
+            const status =
+                document.getElementById("statusFilter").value;
+
+            const role =
+                document.getElementById("roleFilter").value;
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase();
+
+            const rows =
+                document.querySelectorAll("#userTable tr");
+
+            rows.forEach(row => {
+
+                const rowStatus =
+                    row.dataset.status;
+
+                const rowRole =
+                    row.dataset.role;
+
+                const rowName =
+                    row.dataset.name.toLowerCase();
+
+                const rowEmail =
+                    row.dataset.email.toLowerCase();
+
+                const matchesStatus =
+                    status === "all" ||
+                    rowStatus === status;
+
+                const matchesRole =
+                    role === "all" ||
+                    rowRole === role;
+
+                const matchesSearch =
+                    rowName.includes(search) ||
+                    rowEmail.includes(search);
+
+                if (
+                    matchesStatus &&
+                    matchesRole &&
+                    matchesSearch
+                ) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+
+            });
+
+        }
+
+
+        /* Edit User */
+        function editUser(name) {
+
+            alert(
+                "Edit functionality for " +
+                name +
+                " will be connected to the backend."
+            );
+
+        }
+
+
+        /* Delete User */
+        function deleteUser(button, name) {
+
+            const confirmDelete =
+                confirm(
+                    "Are you sure you want to delete " +
+                    name +
+                    "?"
+                );
+
+            if (confirmDelete) {
+
+                button
+                    .closest("tr")
+                    .remove();
+
+                alert("User deleted successfully.");
+
+            }
+
+        }
+
+
+        /* Close modal when clicking outside */
+        window.onclick = function(event) {
+
+            const modal =
+                document.getElementById("userModal");
+
+            if (event.target === modal) {
+                closeModal();
+            }
+
+        };
+
+    </script>
+
+</body>
+</html>
+```

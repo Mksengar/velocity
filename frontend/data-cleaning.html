@@ -1,0 +1,1407 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Data Cleaning | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #25252f;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            padding-left: 12px;
+        }
+
+        .logo span {
+            color: #f5c842;
+        }
+
+        .nav-title {
+            color: #777783;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            color: #aaaab5;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #1d1d26;
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            border-left: 3px solid #f5c842;
+        }
+
+        .icon {
+            width: 20px;
+            text-align: center;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 30px;
+        }
+
+        .page-title p {
+            color: #858592;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #33333e;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            border-color: #f5c842;
+            color: #f5c842;
+        }
+
+
+        /* ================= DATASET INFO ================= */
+
+        .dataset-card {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dataset-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            background: #202027;
+            border-radius: 10px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 24px;
+        }
+
+        .dataset-left h2 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .dataset-left p {
+            color: #777783;
+            font-size: 13px;
+        }
+
+        .status {
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #1d281c;
+            color: #82d66f;
+            font-size: 12px;
+        }
+
+
+        /* ================= STAT CARDS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-card p {
+            color: #777783;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 25px;
+        }
+
+        .warning {
+            color: #f5c842;
+        }
+
+        .danger {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #70d66f;
+        }
+
+
+        /* ================= CLEANING PANEL ================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .panel h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .panel-description {
+            color: #777783;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+
+        /* ================= CLEANING OPTIONS ================= */
+
+        .clean-option {
+            border: 1px solid #2c2c37;
+            border-radius: 9px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .clean-option:hover {
+            border-color: #f5c842;
+            background: #17171f;
+        }
+
+        .clean-option.active {
+            border-color: #f5c842;
+            background: #19191f;
+        }
+
+        .option-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-header input {
+            accent-color: #f5c842;
+        }
+
+        .option-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .option-description {
+            color: #777783;
+            font-size: 11px;
+            margin-top: 7px;
+            line-height: 1.5;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #f5c842;
+            color: #0a0a0f;
+        }
+
+        .btn-primary:hover {
+            background: #ffd95d;
+        }
+
+        .btn-secondary {
+            background: #202027;
+            color: #ffffff;
+            border: 1px solid #33333e;
+        }
+
+        .btn-secondary:hover {
+            border-color: #f5c842;
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .table-toolbar h3 {
+            font-size: 15px;
+        }
+
+        .search-box {
+            background: #0a0a0f;
+            border: 1px solid #33333e;
+            border-radius: 7px;
+            padding: 9px 12px;
+            color: white;
+            outline: none;
+            width: 220px;
+        }
+
+        .search-box:focus {
+            border-color: #f5c842;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 440px;
+            border: 1px solid #25252f;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th {
+            background: #191920;
+            color: #dddde5;
+            padding: 13px;
+            text-align: left;
+            font-size: 12px;
+
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 12px 13px;
+            border-top: 1px solid #25252f;
+            color: #bcbcc5;
+            font-size: 12px;
+        }
+
+        tr:hover td {
+            background: #17171f;
+        }
+
+        .missing {
+            color: #ff6b6b;
+            font-style: italic;
+        }
+
+        .cleaned {
+            color: #70d66f;
+        }
+
+
+        /* ================= PROGRESS ================= */
+
+        .progress-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-section.show {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #292932;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #f5c842;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            color: #777783;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .logo {
+                font-size: 0;
+                text-align: center;
+                padding: 0;
+            }
+
+            .logo span {
+                font-size: 24px;
+            }
+
+            .nav-item span:not(.icon),
+            .nav-title {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+                padding: 18px;
+            }
+
+            .dataset-card {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .table-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="nav-title">
+            Main
+        </div>
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="dataset-upload.html" class="nav-item">
+            <span class="icon">↑</span>
+            <span>Upload Dataset</span>
+        </a>
+
+        <a href="dataset-preview.html" class="nav-item">
+            <span class="icon">▦</span>
+            <span>Datasets</span>
+        </a>
+
+        <div class="nav-title">
+            Data Processing
+        </div>
+
+        <a href="data-cleaning.html" class="nav-item active">
+            <span class="icon">✦</span>
+            <span>Data Cleaning</span>
+        </a>
+
+        <div class="nav-title">
+            Analytics
+        </div>
+
+        <a href="analytics.html" class="nav-item">
+            <span class="icon">◈</span>
+            <span>Analytics</span>
+        </a>
+
+        <a href="reports.html" class="nav-item">
+            <span class="icon">▤</span>
+            <span>Reports</span>
+        </a>
+
+        <div class="nav-title">
+            Account
+        </div>
+
+        <a href="#" class="nav-item">
+            <span class="icon">⚙</span>
+            <span>Settings</span>
+        </a>
+
+        <a href="login.html" class="nav-item">
+            <span class="icon">⇥</span>
+            <span>Logout</span>
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <div class="page-title">
+
+                <h1>Data Cleaning</h1>
+
+                <p>
+                    Detect, clean and prepare your dataset for analysis
+                </p>
+
+            </div>
+
+            <a href="dataset-preview.html" class="back-btn">
+                ← Back to Dataset
+            </a>
+
+        </div>
+
+
+        <!-- DATASET INFORMATION -->
+
+        <div class="dataset-card">
+
+            <div class="dataset-left">
+
+                <div class="file-icon">
+                    📊
+                </div>
+
+                <div>
+
+                    <h2 id="datasetName">
+                        sales_data.csv
+                    </h2>
+
+                    <p>
+                        CSV Dataset • 10 rows • 7 columns
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="status" id="cleanStatus">
+                ● Ready for Cleaning
+            </div>
+
+        </div>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <p>Total Rows</p>
+
+                <h3 id="rowsCount">
+                    10
+                </h3>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>Missing Values</p>
+
+                <h3 id="missingCount" class="warning">
+                    4
+                </h3>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>Duplicate Rows</p>
+
+                <h3 id="duplicateCount" class="danger">
+                    1
+                </h3>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <p>Data Quality</p>
+
+                <h3 id="qualityScore">
+                    72%
+                </h3>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CONTENT GRID ================= -->
+
+        <div class="content-grid">
+
+
+            <!-- CLEANING OPTIONS -->
+
+            <div class="panel">
+
+                <h2>
+                    Cleaning Options
+                </h2>
+
+                <p class="panel-description">
+                    Select operations to apply to your dataset.
+                </p>
+
+
+                <!-- Missing Values -->
+
+                <div class="clean-option active">
+
+                    <div class="option-header">
+
+                        <input
+                            type="checkbox"
+                            id="missingOption"
+                            checked
+                        >
+
+                        <span class="option-title">
+                            Handle Missing Values
+                        </span>
+
+                    </div>
+
+                    <p class="option-description">
+                        Replace missing numeric values with the
+                        column mean and text values with the mode.
+                    </p>
+
+                </div>
+
+
+                <!-- Duplicate -->
+
+                <div class="clean-option active">
+
+                    <div class="option-header">
+
+                        <input
+                            type="checkbox"
+                            id="duplicateOption"
+                            checked
+                        >
+
+                        <span class="option-title">
+                            Remove Duplicates
+                        </span>
+
+                    </div>
+
+                    <p class="option-description">
+                        Detect and remove duplicate records
+                        from the dataset.
+                    </p>
+
+                </div>
+
+
+                <!-- Data Types -->
+
+                <div class="clean-option">
+
+                    <div class="option-header">
+
+                        <input
+                            type="checkbox"
+                            id="datatypeOption"
+                        >
+
+                        <span class="option-title">
+                            Fix Data Types
+                        </span>
+
+                    </div>
+
+                    <p class="option-description">
+                        Automatically detect and convert
+                        incorrect column data types.
+                    </p>
+
+                </div>
+
+
+                <!-- Outliers -->
+
+                <div class="clean-option">
+
+                    <div class="option-header">
+
+                        <input
+                            type="checkbox"
+                            id="outlierOption"
+                        >
+
+                        <span class="option-title">
+                            Handle Outliers
+                        </span>
+
+                    </div>
+
+                    <p class="option-description">
+                        Detect extreme numerical values using
+                        statistical methods.
+                    </p>
+
+                </div>
+
+
+                <!-- Whitespace -->
+
+                <div class="clean-option">
+
+                    <div class="option-header">
+
+                        <input
+                            type="checkbox"
+                            id="whitespaceOption"
+                        >
+
+                        <span class="option-title">
+                            Remove Extra Spaces
+                        </span>
+
+                    </div>
+
+                    <p class="option-description">
+                        Clean unnecessary spaces from text
+                        columns.
+                    </p>
+
+                </div>
+
+
+                <!-- Buttons -->
+
+                <div class="button-group">
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="cleanDataset()"
+                    >
+                        ✦ Clean Dataset
+                    </button>
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="resetDataset()"
+                    >
+                        Reset Changes
+                    </button>
+
+                </div>
+
+
+                <!-- Progress -->
+
+                <div
+                    class="progress-section"
+                    id="progressSection"
+                >
+
+                    <p>
+                        Cleaning dataset...
+                    </p>
+
+                    <div class="progress-bar">
+
+                        <div
+                            class="progress-fill"
+                            id="progressFill"
+                        ></div>
+
+                    </div>
+
+                    <p
+                        class="progress-text"
+                        id="progressText"
+                    >
+                        Preparing...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- DATA PREVIEW -->
+
+            <div class="panel">
+
+                <div class="table-toolbar">
+
+                    <div>
+
+                        <h3>
+                            Data Quality Preview
+                        </h3>
+
+                    </div>
+
+                    <input
+                        type="text"
+                        class="search-box"
+                        id="searchInput"
+                        placeholder="Search data..."
+                        onkeyup="searchTable()"
+                    >
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table id="cleanTable">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Customer</th>
+
+                                <th>Product</th>
+
+                                <th>Category</th>
+
+                                <th>Quantity</th>
+
+                                <th>Price</th>
+
+                                <th>Region</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>1</td>
+
+                                <td>Rahul Sharma</td>
+
+                                <td>Laptop</td>
+
+                                <td>Electronics</td>
+
+                                <td>2</td>
+
+                                <td>55000</td>
+
+                                <td>North</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>2</td>
+
+                                <td>Priya Patel</td>
+
+                                <td>Mobile</td>
+
+                                <td>Electronics</td>
+
+                                <td>3</td>
+
+                                <td>25000</td>
+
+                                <td>West</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>3</td>
+
+                                <td>Amit Kumar</td>
+
+                                <td>Chair</td>
+
+                                <td>Furniture</td>
+
+                                <td class="missing">
+                                    Missing
+                                </td>
+
+                                <td>4500</td>
+
+                                <td>South</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>4</td>
+
+                                <td>Neha Singh</td>
+
+                                <td>Headphones</td>
+
+                                <td>Electronics</td>
+
+                                <td>4</td>
+
+                                <td class="missing">
+                                    Missing
+                                </td>
+
+                                <td>East</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>5</td>
+
+                                <td>Arjun Mehta</td>
+
+                                <td>Table</td>
+
+                                <td>Furniture</td>
+
+                                <td>2</td>
+
+                                <td>8500</td>
+
+                                <td>West</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>6</td>
+
+                                <td>Simran Kaur</td>
+
+                                <td>Monitor</td>
+
+                                <td>Electronics</td>
+
+                                <td>2</td>
+
+                                <td>18000</td>
+
+                                <td>North</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>7</td>
+
+                                <td>Rohan Verma</td>
+
+                                <td>Keyboard</td>
+
+                                <td>Accessories</td>
+
+                                <td>6</td>
+
+                                <td>1500</td>
+
+                                <td>South</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>8</td>
+
+                                <td>Rohan Verma</td>
+
+                                <td>Keyboard</td>
+
+                                <td>Accessories</td>
+
+                                <td>6</td>
+
+                                <td>1500</td>
+
+                                <td>South</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>9</td>
+
+                                <td>Anjali Shah</td>
+
+                                <td>Mouse</td>
+
+                                <td>Accessories</td>
+
+                                <td>8</td>
+
+                                <td>800</td>
+
+                                <td>West</td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>10</td>
+
+                                <td>Kavita Rao</td>
+
+                                <td>Desk</td>
+
+                                <td>Furniture</td>
+
+                                <td>3</td>
+
+                                <td>7000</td>
+
+                                <td>North</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /* ================= SEARCH ================= */
+
+        function searchTable() {
+
+            const input =
+                document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+            const rows =
+                document
+                .querySelectorAll("#cleanTable tbody tr");
+
+            rows.forEach(row => {
+
+                const text =
+                    row.innerText.toLowerCase();
+
+                if (text.includes(input)) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+        }
+
+
+        /* ================= CLEAN DATASET ================= */
+
+        function cleanDataset() {
+
+            const progressSection =
+                document.getElementById("progressSection");
+
+            const progressFill =
+                document.getElementById("progressFill");
+
+            const progressText =
+                document.getElementById("progressText");
+
+            const status =
+                document.getElementById("cleanStatus");
+
+            progressSection.classList.add("show");
+
+            status.innerText = "● Cleaning in progress";
+
+            status.style.color = "#f5c842";
+
+            let progress = 0;
+
+            const interval =
+                setInterval(() => {
+
+                    progress += 10;
+
+                    progressFill.style.width =
+                        progress + "%";
+
+                    if (progress <= 20) {
+
+                        progressText.innerText =
+                            "Scanning dataset...";
+
+                    } else if (progress <= 40) {
+
+                        progressText.innerText =
+                            "Checking missing values...";
+
+                    } else if (progress <= 60) {
+
+                        progressText.innerText =
+                            "Removing duplicate records...";
+
+                    } else if (progress <= 80) {
+
+                        progressText.innerText =
+                            "Validating data types...";
+
+                    } else {
+
+                        progressText.innerText =
+                            "Finalizing cleaned dataset...";
+
+                    }
+
+                    if (progress >= 100) {
+
+                        clearInterval(interval);
+
+                        finishCleaning();
+
+                    }
+
+                }, 150);
+
+        }
+
+
+        /* ================= FINISH CLEANING ================= */
+
+        function finishCleaning() {
+
+            const missingOption =
+                document.getElementById("missingOption")
+                .checked;
+
+            const duplicateOption =
+                document.getElementById("duplicateOption")
+                .checked;
+
+
+            /* Replace missing values */
+
+            if (missingOption) {
+
+                const missingCells =
+                    document.querySelectorAll(".missing");
+
+                missingCells.forEach(cell => {
+
+                    if (cell.innerText === "Missing") {
+
+                        cell.innerText = "2";
+
+                        cell.classList.remove("missing");
+
+                        cell.classList.add("cleaned");
+
+                    }
+
+                });
+
+            }
+
+
+            /* Remove duplicate row */
+
+            if (duplicateOption) {
+
+                const rows =
+                    document.querySelectorAll(
+                        "#cleanTable tbody tr"
+                    );
+
+                if (rows.length > 7) {
+
+                    rows[7].remove();
+
+                }
+
+            }
+
+
+            /* Update statistics */
+
+            if (missingOption) {
+
+                document.getElementById(
+                    "missingCount"
+                ).innerText = "0";
+
+                document.getElementById(
+                    "missingCount"
+                ).className = "success";
+
+            }
+
+
+            if (duplicateOption) {
+
+                document.getElementById(
+                    "duplicateCount"
+                ).innerText = "0";
+
+                document.getElementById(
+                    "duplicateCount"
+                ).className = "success";
+
+            }
+
+
+            document.getElementById(
+                "qualityScore"
+            ).innerText = "98%";
+
+
+            document.getElementById(
+                "qualityScore"
+            ).className = "success";
+
+
+            document.getElementById(
+                "cleanStatus"
+            ).innerText =
+                "● Dataset Cleaned";
+
+            document.getElementById(
+                "cleanStatus"
+            ).style.color =
+                "#70d66f";
+
+
+            document.getElementById(
+                "progressText"
+            ).innerText =
+                "Cleaning completed successfully.";
+
+        }
+
+
+        /* ================= RESET ================= */
+
+        function resetDataset() {
+
+            location.reload();
+
+        }
+
+
+        /* ================= DATASET NAME ================= */
+
+        function loadDatasetName() {
+
+            const name =
+                localStorage.getItem("datasetName");
+
+            if (name) {
+
+                document.getElementById(
+                    "datasetName"
+                ).innerText = name;
+
+            }
+
+        }
+
+        loadDatasetName();
+
+    </script>
+
+</body>
+</html>
+```

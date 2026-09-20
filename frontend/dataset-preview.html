@@ -1,0 +1,825 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Preview | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #25252f;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            padding-left: 12px;
+        }
+
+        .logo span {
+            color: #f5c842;
+        }
+
+        .nav-title {
+            color: #777783;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            color: #aaaab5;
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #1d1d26;
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            border-left: 3px solid #f5c842;
+        }
+
+        .icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 30px;
+        }
+
+        .page-title p {
+            color: #858592;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #33333e;
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            border-color: #f5c842;
+            color: #f5c842;
+        }
+
+        /* Dataset Header */
+        .dataset-header {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .dataset-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .dataset-name {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: #202027;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .dataset-name h2 {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .dataset-name p {
+            color: #777783;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 11px 17px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #f5c842;
+            color: #0a0a0f;
+        }
+
+        .btn-primary:hover {
+            background: #ffd95d;
+        }
+
+        .btn-secondary {
+            background: #202027;
+            border: 1px solid #33333e;
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            border-color: #f5c842;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-card p {
+            color: #777783;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 25px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-radius: 12px 12px 0 0;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #0a0a0f;
+            border: 1px solid #33333e;
+            color: #ffffff;
+            padding: 11px 15px 11px 38px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #f5c842;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 10px;
+            color: #777783;
+        }
+
+        .row-info {
+            color: #777783;
+            font-size: 13px;
+        }
+
+        /* Table */
+        .table-container {
+            background: #111118;
+            border: 1px solid #25252f;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow: auto;
+            max-height: 500px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th {
+            background: #191920;
+            color: #d9d9df;
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        td {
+            padding: 13px 16px;
+            border-top: 1px solid #25252f;
+            color: #bcbcc5;
+            font-size: 13px;
+        }
+
+        tr:hover td {
+            background: #17171f;
+        }
+
+        .number {
+            color: #f5c842;
+        }
+
+        /* Footer */
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            background: #111118;
+            color: #ffffff;
+            border: 1px solid #33333e;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: #f5c842;
+            color: #0a0a0f;
+            border-color: #f5c842;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .logo {
+                font-size: 0;
+                text-align: center;
+                padding: 0;
+            }
+
+            .logo span {
+                font-size: 24px;
+            }
+
+            .nav-item span:not(.icon),
+            .nav-title {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .main {
+                padding: 18px;
+            }
+
+            .dataset-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .actions button {
+                flex: 1;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-actions {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="nav-title">Main</div>
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="dataset-upload.html" class="nav-item">
+            <span class="icon">↑</span>
+            <span>Upload Dataset</span>
+        </a>
+
+        <a href="dataset-preview.html" class="nav-item active">
+            <span class="icon">▦</span>
+            <span>Datasets</span>
+        </a>
+
+        <div class="nav-title">Analytics</div>
+
+        <a href="#" class="nav-item">
+            <span class="icon">◫</span>
+            <span>Reports</span>
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="icon">◈</span>
+            <span>Analytics</span>
+        </a>
+
+        <div class="nav-title">Account</div>
+
+        <a href="#" class="nav-item">
+            <span class="icon">⚙</span>
+            <span>Settings</span>
+        </a>
+
+        <a href="login.html" class="nav-item">
+            <span class="icon">⇥</span>
+            <span>Logout</span>
+        </a>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+
+            <div class="page-title">
+                <h1>Dataset Preview</h1>
+                <p>Explore and analyze your uploaded dataset</p>
+            </div>
+
+            <a href="dataset-upload.html" class="back-btn">
+                ← Upload Dataset
+            </a>
+
+        </div>
+
+
+        <!-- Dataset Header -->
+        <section class="dataset-header">
+
+            <div class="dataset-info">
+
+                <div class="dataset-name">
+
+                    <div class="file-icon">
+                        📊
+                    </div>
+
+                    <div>
+                        <h2 id="datasetName">sales_data.csv</h2>
+                        <p id="datasetDetails">
+                            CSV Dataset • Uploaded just now
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="actions">
+
+                    <button class="btn btn-secondary" onclick="downloadDataset()">
+                        ↓ Download
+                    </button>
+
+                    <button class="btn btn-primary" onclick="generateDashboard()">
+                        Generate Dashboard →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Rows</p>
+                <h3 id="totalRows">10</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Total Columns</p>
+                <h3 id="totalColumns">7</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Numeric Columns</p>
+                <h3 id="numericColumns">5</h3>
+            </div>
+
+            <div class="stat-card">
+                <p>Missing Values</p>
+                <h3 id="missingValues">0</h3>
+            </div>
+
+        </section>
+
+
+        <!-- Data Table -->
+        <section>
+
+            <div class="toolbar">
+
+                <div class="search-box">
+                    <span class="search-icon">⌕</span>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search dataset..."
+                        onkeyup="searchTable()"
+                    >
+                </div>
+
+                <div class="row-info">
+                    Showing <strong id="visibleRows">10</strong> rows
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table id="datasetTable">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Sales</th>
+                            <th>Region</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td class="number">1</td>
+                            <td>Rahul Sharma</td>
+                            <td>Laptop</td>
+                            <td>Electronics</td>
+                            <td>2</td>
+                            <td>55000</td>
+                            <td>110000</td>
+                            <td>North</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">2</td>
+                            <td>Priya Patel</td>
+                            <td>Mobile</td>
+                            <td>Electronics</td>
+                            <td>3</td>
+                            <td>25000</td>
+                            <td>75000</td>
+                            <td>West</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">3</td>
+                            <td>Amit Kumar</td>
+                            <td>Chair</td>
+                            <td>Furniture</td>
+                            <td>5</td>
+                            <td>4500</td>
+                            <td>22500</td>
+                            <td>South</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">4</td>
+                            <td>Neha Singh</td>
+                            <td>Headphones</td>
+                            <td>Electronics</td>
+                            <td>4</td>
+                            <td>2200</td>
+                            <td>8800</td>
+                            <td>East</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">5</td>
+                            <td>Arjun Mehta</td>
+                            <td>Table</td>
+                            <td>Furniture</td>
+                            <td>2</td>
+                            <td>8500</td>
+                            <td>17000</td>
+                            <td>West</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">6</td>
+                            <td>Simran Kaur</td>
+                            <td>Monitor</td>
+                            <td>Electronics</td>
+                            <td>2</td>
+                            <td>18000</td>
+                            <td>36000</td>
+                            <td>North</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">7</td>
+                            <td>Rohan Verma</td>
+                            <td>Keyboard</td>
+                            <td>Accessories</td>
+                            <td>6</td>
+                            <td>1500</td>
+                            <td>9000</td>
+                            <td>South</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">8</td>
+                            <td>Anjali Shah</td>
+                            <td>Mouse</td>
+                            <td>Accessories</td>
+                            <td>8</td>
+                            <td>800</td>
+                            <td>6400</td>
+                            <td>West</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">9</td>
+                            <td>Vivek Joshi</td>
+                            <td>Printer</td>
+                            <td>Electronics</td>
+                            <td>1</td>
+                            <td>12000</td>
+                            <td>12000</td>
+                            <td>East</td>
+                        </tr>
+
+                        <tr>
+                            <td class="number">10</td>
+                            <td>Kavita Rao</td>
+                            <td>Desk</td>
+                            <td>Furniture</td>
+                            <td>3</td>
+                            <td>7000</td>
+                            <td>21000</td>
+                            <td>North</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- Footer -->
+        <div class="footer-actions">
+
+            <div class="row-info">
+                Dataset preview • 10 sample records
+            </div>
+
+            <div class="pagination">
+
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">→</button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        /* Search Dataset */
+        function searchTable() {
+
+            const input =
+                document.getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+            const table =
+                document.getElementById("datasetTable");
+
+            const rows =
+                table.getElementsByTagName("tbody")[0]
+                .getElementsByTagName("tr");
+
+            let visible = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+
+                const rowText =
+                    rows[i].innerText.toLowerCase();
+
+                if (rowText.includes(input)) {
+
+                    rows[i].style.display = "";
+                    visible++;
+
+                } else {
+
+                    rows[i].style.display = "none";
+
+                }
+
+            }
+
+            document.getElementById("visibleRows").innerText = visible;
+        }
+
+
+        /* Generate Dashboard */
+        function generateDashboard() {
+
+            alert(
+                "Dashboard generation started! Your dataset will be analyzed and charts will be created."
+            );
+
+            // Later connect this to Flask API
+            // window.location.href = "analytics.html";
+        }
+
+
+        /* Download Dataset */
+        function downloadDataset() {
+
+            alert(
+                "Dataset download will be connected to your Flask backend."
+            );
+
+            // Example later:
+            // window.location.href = "/api/download-dataset";
+        }
+
+
+        /* Load Dataset Information */
+        function loadDatasetInfo() {
+
+            const savedName =
+                localStorage.getItem("datasetName");
+
+            if (savedName) {
+
+                document.getElementById("datasetName")
+                    .innerText = savedName;
+
+            }
+
+        }
+
+        loadDatasetInfo();
+
+    </script>
+
+</body>
+</html>
+```

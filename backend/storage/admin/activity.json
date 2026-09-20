@@ -1,0 +1,58 @@
+[
+    {
+        "activity_id": "101e1fd1-da3c-4531-8174-97937351f536",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-20T00:34:40.450020Z"
+    },
+    {
+        "activity_id": "e951bd19-be83-4c04-b23e-7c6f73600647",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-20T00:31:08.196405Z"
+    },
+    {
+        "activity_id": "df3cc612-79af-4b0c-ae8f-b3c805a74acd",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-19T21:12:59.608659Z"
+    },
+    {
+        "activity_id": "c6a82e31-0a9e-4e89-a9a8-2105fcf472bd",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-19T21:11:32.407646Z"
+    },
+    {
+        "activity_id": "4bf97640-0f83-4da7-aae0-0fbdfc98a887",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-19T21:10:35.276319Z"
+    },
+    {
+        "activity_id": "905354e6-2a46-4700-8859-3a66c56bd2a8",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-19T21:07:14.257978Z"
+    },
+    {
+        "activity_id": "8753625e-406d-48bc-896f-663875399fb3",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-19T21:05:32.399666Z"
+    }
+]

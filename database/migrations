@@ -1,0 +1,167 @@
+```text
+# Velocity BI - Database Migrations
+
+This directory contains database migration files for the
+Velocity BI Flask application.
+
+Migration system:
+    Flask-Migrate
+    Alembic
+
+Database:
+    MySQL 8+
+
+------------------------------------------------------------
+INSTALLATION
+------------------------------------------------------------
+
+Install Flask-Migrate:
+
+    pip install Flask-Migrate
+
+Add it to requirements.txt:
+
+    Flask-Migrate==4.1.0
+
+
+------------------------------------------------------------
+INITIALIZE MIGRATIONS
+------------------------------------------------------------
+
+From the project root:
+
+    flask db init
+
+This creates:
+
+    migrations/
+    ├── README
+    ├── alembic.ini
+    ├── env.py
+    ├── script.py.mako
+    └── versions/
+
+
+------------------------------------------------------------
+CREATE A MIGRATION
+------------------------------------------------------------
+
+After changing your SQLAlchemy models:
+
+    flask db migrate -m "Create initial tables"
+
+
+------------------------------------------------------------
+APPLY MIGRATIONS
+------------------------------------------------------------
+
+Run:
+
+    flask db upgrade
+
+
+------------------------------------------------------------
+CHECK CURRENT MIGRATION
+------------------------------------------------------------
+
+Run:
+
+    flask db current
+
+
+------------------------------------------------------------
+VIEW MIGRATION HISTORY
+------------------------------------------------------------
+
+Run:
+
+    flask db history
+
+
+------------------------------------------------------------
+ROLLBACK LAST MIGRATION
+------------------------------------------------------------
+
+Run:
+
+    flask db downgrade
+
+
+------------------------------------------------------------
+ROLLBACK ONE STEP
+------------------------------------------------------------
+
+Run:
+
+    flask db downgrade -1
+
+
+------------------------------------------------------------
+UPGRADE TO LATEST
+------------------------------------------------------------
+
+Run:
+
+    flask db upgrade
+
+
+------------------------------------------------------------
+IMPORTANT
+------------------------------------------------------------
+
+Do not manually edit the database after migrations have
+been deployed.
+
+Recommended workflow:
+
+    1. Change SQLAlchemy model
+    2. Generate migration
+
+       flask db migrate -m "Describe the change"
+
+    3. Review generated migration
+    4. Apply migration
+
+       flask db upgrade
+
+    5. Test the application
+
+
+------------------------------------------------------------
+EXAMPLE
+------------------------------------------------------------
+
+Suppose you add a phone_number field to User:
+
+    phone_number = db.Column(
+        db.String(20),
+        nullable=True
+    )
+
+Generate migration:
+
+    flask db migrate -m "Add phone number to users"
+
+Apply:
+
+    flask db upgrade
+
+
+------------------------------------------------------------
+VELOCITY BI
+------------------------------------------------------------
+
+The migration system should manage tables such as:
+
+    users
+    datasets
+    dashboards
+    reports
+    activity
+    analyses
+    visualizations
+    time_series
+    forecasts
+    user_settings
+    login_sessions
+```

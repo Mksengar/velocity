@@ -1,0 +1,899 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Login to Velocity BI - Business Intelligence Platform">
+
+    <title>Login | Velocity BI</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Project CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <style>
+        :root {
+            --bg: #08090d;
+            --card: #11131a;
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #ffffff;
+            --muted: #9da0ad;
+            --accent: #f5c842;
+            --accent-dark: #d9ae21;
+            --danger: #ff5c5c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 9, 13, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 18px 0;
+        }
+
+        .navbar-brand {
+            font-family: "Syne", sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            color: white !important;
+        }
+
+        .brand-dot {
+            color: var(--accent);
+        }
+
+        .back-home {
+            color: var(--muted);
+            transition: 0.3s;
+        }
+
+        .back-home:hover {
+            color: var(--accent);
+        }
+
+        /* ================= LOGIN AREA ================= */
+
+        .login-section {
+            min-height: calc(100vh - 75px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-section::before {
+            content: "";
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(245, 200, 66, 0.08);
+            filter: blur(100px);
+            top: 10%;
+            left: 10%;
+        }
+
+        .login-section::after {
+            content: "";
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: rgba(80, 100, 255, 0.05);
+            filter: blur(100px);
+            bottom: 0;
+            right: 10%;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 470px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ================= LOGIN CARD ================= */
+
+        .login-card {
+            background: rgba(17, 19, 26, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        .login-logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(245, 200, 66, 0.1);
+            color: var(--accent);
+            font-size: 30px;
+        }
+
+        .login-title {
+            font-family: "Syne", sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-label {
+            color: #e8e8ec;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777b89;
+            pointer-events: none;
+        }
+
+        .form-control-custom {
+            width: 100%;
+            height: 52px;
+            padding: 0 45px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            outline: none;
+            background: #0c0e13;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .form-control-custom::placeholder {
+            color: #646875;
+        }
+
+        .form-control-custom:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.08);
+            background: #0c0e13;
+            color: white;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #777b89;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .password-toggle:hover {
+            color: var(--accent);
+        }
+
+        /* ================= OPTIONS ================= */
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 15px 0 25px;
+            font-size: 14px;
+        }
+
+        .remember-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+        }
+
+        .remember-box input {
+            accent-color: var(--accent);
+        }
+
+        .forgot-password {
+            color: var(--accent);
+        }
+
+        .forgot-password:hover {
+            color: white;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .login-button {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #111;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-button:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .login-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ================= DIVIDER ================= */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 28px 0;
+            color: #656875;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ================= REGISTER ================= */
+
+        .register-text {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 0;
+        }
+
+        .register-text a {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .register-text a:hover {
+            color: white;
+        }
+
+        /* ================= ALERT ================= */
+
+        .login-alert {
+            display: none;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .login-alert.error {
+            display: block;
+            background: rgba(255, 92, 92, 0.08);
+            border: 1px solid rgba(255, 92, 92, 0.2);
+            color: #ff8a8a;
+        }
+
+        .login-alert.success {
+            display: block;
+            background: rgba(75, 210, 130, 0.08);
+            border: 1px solid rgba(75, 210, 130, 0.2);
+            color: #76e0a3;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .login-footer {
+            text-align: center;
+            color: #666a76;
+            font-size: 13px;
+            margin-top: 25px;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 576px) {
+
+            .login-section {
+                padding: 30px 15px;
+            }
+
+            .login-card {
+                padding: 28px 22px;
+            }
+
+            .login-title {
+                font-size: 29px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+    <div class="container">
+
+        <div class="d-flex align-items-center justify-content-between">
+
+            <a href="index.html" class="navbar-brand">
+                Velocity<span class="brand-dot">.</span>BI
+            </a>
+
+            <a href="index.html" class="back-home">
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Home
+            </a>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- ================= LOGIN SECTION ================= -->
+
+<section class="login-section">
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <!-- Logo -->
+
+            <div class="login-logo">
+                <i class="bi bi-bar-chart-fill"></i>
+            </div>
+
+
+            <!-- Heading -->
+
+            <h1 class="login-title">
+                Welcome Back
+            </h1>
+
+            <p class="login-subtitle">
+                Sign in to access your Velocity BI dashboard
+                and continue analyzing your data.
+            </p>
+
+
+            <!-- Alert -->
+
+            <div id="loginAlert" class="login-alert"></div>
+
+
+            <!-- Login Form -->
+
+            <form id="loginForm">
+
+                <!-- Email -->
+
+                <div class="mb-3">
+
+                    <label for="email" class="form-label">
+                        Email Address
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-envelope input-icon"></i>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control-custom"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="mb-3">
+
+                    <label for="password" class="form-label">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-lock input-icon"></i>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control-custom"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="password-toggle"
+                            aria-label="Show password">
+
+                            <i class="bi bi-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Options -->
+
+                <div class="form-options">
+
+                    <label class="remember-box">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe">
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+                    <a
+                        href="#"
+                        id="forgotPassword"
+                        class="forgot-password">
+
+                        Forgot password?
+
+                    </a>
+
+                </div>
+
+
+                <!-- Login Button -->
+
+                <button
+                    type="submit"
+                    id="loginButton"
+                    class="login-button">
+
+                    <span id="loginButtonText">
+                        Sign In
+                    </span>
+
+                    <span
+                        id="loginSpinner"
+                        class="spinner-border spinner-border-sm ms-2"
+                        style="display: none;"
+                        role="status">
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- Divider -->
+
+            <div class="divider">
+                OR
+            </div>
+
+
+            <!-- Register -->
+
+            <p class="register-text">
+
+                Don't have an account?
+
+                <a href="register.html">
+                    Create an account
+                </a>
+
+            </p>
+
+        </div>
+
+
+        <div class="login-footer">
+
+            <p>
+                © 2026 Velocity BI. All rights reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+    /*
+     * Velocity BI Login
+     *
+     * This page is ready to connect to:
+     *
+     * POST /api/auth/login
+     *
+     * Expected request:
+     * {
+     *     "email": "user@example.com",
+     *     "password": "password"
+     * }
+     *
+     * Expected response:
+     * {
+     *     "success": true,
+     *     "token": "JWT_TOKEN",
+     *     "user": {
+     *         "id": 1,
+     *         "name": "User",
+     *         "email": "user@example.com",
+     *         "role": "user"
+     *     }
+     * }
+     */
+
+
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const loginButtonText = document.getElementById("loginButtonText");
+    const loginSpinner = document.getElementById("loginSpinner");
+    const loginAlert = document.getElementById("loginAlert");
+
+    const togglePassword =
+        document.getElementById("togglePassword");
+
+    const password =
+        document.getElementById("password");
+
+
+    // ==========================================
+    // SHOW / HIDE PASSWORD
+    // ==========================================
+
+    togglePassword.addEventListener("click", function () {
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            this.innerHTML =
+                '<i class="bi bi-eye-slash"></i>';
+
+            this.setAttribute(
+                "aria-label",
+                "Hide password"
+            );
+
+        } else {
+
+            password.type = "password";
+
+            this.innerHTML =
+                '<i class="bi bi-eye"></i>';
+
+            this.setAttribute(
+                "aria-label",
+                "Show password"
+            );
+        }
+
+    });
+
+
+    // ==========================================
+    // ALERT FUNCTION
+    // ==========================================
+
+    function showAlert(message, type = "error") {
+
+        loginAlert.textContent = message;
+
+        loginAlert.className =
+            "login-alert " + type;
+
+    }
+
+
+    function hideAlert() {
+
+        loginAlert.textContent = "";
+
+        loginAlert.className =
+            "login-alert";
+
+    }
+
+
+    // ==========================================
+    // LOADING STATE
+    // ==========================================
+
+    function setLoading(loading) {
+
+        loginButton.disabled = loading;
+
+        if (loading) {
+
+            loginButtonText.textContent =
+                "Signing In...";
+
+            loginSpinner.style.display =
+                "inline-block";
+
+        } else {
+
+            loginButtonText.textContent =
+                "Sign In";
+
+            loginSpinner.style.display =
+                "none";
+        }
+    }
+
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
+
+    loginForm.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        hideAlert();
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const passwordValue =
+            document.getElementById("password").value;
+
+        const rememberMe =
+            document.getElementById("rememberMe").checked;
+
+
+        // Basic validation
+
+        if (!email || !passwordValue) {
+
+            showAlert(
+                "Please enter your email and password."
+            );
+
+            return;
+        }
+
+
+        if (!email.includes("@")) {
+
+            showAlert(
+                "Please enter a valid email address."
+            );
+
+            return;
+        }
+
+
+        setLoading(true);
+
+
+        try {
+
+            /*
+             * Change this URL if your Flask server
+             * runs on another host or port.
+             */
+
+            const API_URL =
+                "http://127.0.0.1:5000/api/auth/login";
+
+
+            const response = await fetch(API_URL, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    email: email,
+
+                    password: passwordValue
+
+                })
+
+            });
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    data.error ||
+                    "Invalid email or password."
+                );
+
+            }
+
+
+            /*
+             * Save JWT token
+             */
+
+            const token =
+                data.access_token ||
+                data.token;
+
+            if (token) {
+
+                localStorage.setItem(
+                    "velocity_bi_token",
+                    token
+                );
+
+            }
+
+
+            /*
+             * Save user information
+             */
+
+            if (data.user) {
+
+                localStorage.setItem(
+                    "velocity_bi_user",
+                    JSON.stringify(data.user)
+                );
+
+            }
+
+
+            showAlert(
+                "Login successful. Redirecting...",
+                "success"
+            );
+
+
+            /*
+             * Redirect to dashboard
+             */
+
+            setTimeout(function () {
+
+                window.location.href =
+                    "dashboard.html";
+
+            }, 700);
+
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            showAlert(
+                error.message ||
+                "Unable to connect to the server."
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+    });
+
+
+    // ==========================================
+    // FORGOT PASSWORD
+    // ==========================================
+
+    document
+        .getElementById("forgotPassword")
+        .addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            showAlert(
+                "Password reset functionality will be available soon."
+            );
+
+        });
+</script>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,2335 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #0a0a0f;
+            color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+
+        /* ========================================
+           SIDEBAR
+        ======================================== */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #111118;
+            border-right: 1px solid #25252e;
+
+            padding: 25px 18px;
+
+            z-index: 1000;
+
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            font-family: "Syne", sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+
+            padding-left: 12px;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #f5c842;
+        }
+
+        .admin-badge {
+            display: inline-block;
+
+            margin-left: 12px;
+            margin-bottom: 25px;
+
+            padding: 5px 9px;
+
+            border-radius: 15px;
+
+            background: #24231a;
+            border: 1px solid #4b4321;
+
+            color: #f5c842;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-title {
+            color: #777783;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px;
+
+            margin: 5px 0;
+
+            border-radius: 9px;
+
+            color: #aaaab5;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #1b1b24;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: #f5c842;
+            color: #0a0a0f;
+
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 22px;
+
+            text-align: center;
+
+            font-size: 16px;
+        }
+
+
+        /* ========================================
+           MAIN
+        ======================================== */
+
+        .main {
+            margin-left: 250px;
+
+            padding: 30px 40px;
+
+            max-width: 1500px;
+        }
+
+
+        /* ========================================
+           TOPBAR
+        ======================================== */
+
+        .topbar {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 30px;
+        }
+
+        .page-heading {
+            display: flex;
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .mobile-menu {
+            display: none;
+
+            font-size: 24px;
+
+            cursor: pointer;
+        }
+
+        .page-title {
+            font-family: "Syne", sans-serif;
+
+            font-size: 31px;
+            font-weight: 800;
+        }
+
+        .page-subtitle {
+            color: #858590;
+
+            font-size: 13px;
+
+            margin-top: 5px;
+        }
+
+        .top-actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+        }
+
+        .notification {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #15151d;
+
+            border: 1px solid #282832;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+
+            width: 7px;
+            height: 7px;
+
+            background: #f5c842;
+
+            border-radius: 50%;
+
+            top: 8px;
+            right: 9px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 7px 12px 7px 7px;
+
+            background: #15151d;
+
+            border: 1px solid #282832;
+
+            border-radius: 10px;
+        }
+
+        .admin-avatar {
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #f5c842;
+
+            color: #111;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .admin-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .admin-role {
+            color: #777783;
+
+            font-size: 10px;
+
+            margin-top: 2px;
+        }
+
+
+        /* ========================================
+           WELCOME
+        ======================================== */
+
+        .welcome-card {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 25px 28px;
+
+            margin-bottom: 25px;
+
+            background: #111118;
+
+            border: 1px solid #25252e;
+
+            border-radius: 16px;
+        }
+
+        .welcome-title {
+            font-family: "Syne", sans-serif;
+
+            font-size: 22px;
+
+            margin-bottom: 5px;
+        }
+
+        .welcome-text {
+            color: #858590;
+
+            font-size: 13px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 9px 13px;
+
+            background: #172319;
+
+            border: 1px solid #315337;
+
+            border-radius: 20px;
+
+            color: #86d68f;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            background: #86d68f;
+
+            border-radius: 50%;
+        }
+
+
+        /* ========================================
+           STAT CARDS
+        ======================================== */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #111118;
+
+            border: 1px solid #25252e;
+
+            border-radius: 14px;
+
+            padding: 21px;
+
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: #3a3a45;
+            transform: translateY(-2px);
+        }
+
+        .stat-top {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 16px;
+        }
+
+        .stat-label {
+            color: #81818c;
+
+            font-size: 12px;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #20202a;
+
+            border-radius: 9px;
+
+            font-size: 17px;
+        }
+
+        .stat-number {
+            font-family: "Syne", sans-serif;
+
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .stat-change {
+            margin-top: 7px;
+
+            color: #7fc987;
+
+            font-size: 11px;
+        }
+
+
+        /* ========================================
+           MAIN GRID
+        ======================================== */
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns: 1.4fr 1fr;
+
+            gap: 22px;
+
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #111118;
+
+            border: 1px solid #25252e;
+
+            border-radius: 15px;
+
+            padding: 23px;
+        }
+
+        .card-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: "Syne", sans-serif;
+
+            font-size: 18px;
+        }
+
+        .view-all {
+            color: #f5c842;
+
+            font-size: 12px;
+
+            cursor: pointer;
+        }
+
+
+        /* ========================================
+           ACTIVITY CHART
+        ======================================== */
+
+        .chart-container {
+            height: 230px;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            gap: 14px;
+
+            padding: 10px 5px 0;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+
+            height: 100%;
+
+            display: flex;
+
+            align-items: flex-end;
+
+            justify-content: center;
+
+            position: relative;
+        }
+
+        .bar {
+            width: 70%;
+
+            max-width: 45px;
+
+            background: #f5c842;
+
+            border-radius: 6px 6px 2px 2px;
+
+            transition: 0.3s;
+
+            cursor: pointer;
+
+            position: relative;
+        }
+
+        .bar:hover {
+            background: #ffd95d;
+        }
+
+        .bar-value {
+            position: absolute;
+
+            top: -22px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            color: #aaaab5;
+
+            font-size: 10px;
+        }
+
+        .bar-label {
+            position: absolute;
+
+            bottom: -25px;
+
+            color: #777783;
+
+            font-size: 10px;
+        }
+
+
+        /* ========================================
+           SYSTEM SUMMARY
+        ======================================== */
+
+        .summary-row {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 15px 0;
+
+            border-bottom: 1px solid #25252e;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .summary-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #20202a;
+
+            border-radius: 9px;
+        }
+
+        .summary-name {
+            font-size: 13px;
+        }
+
+        .summary-description {
+            color: #777783;
+
+            font-size: 10px;
+
+            margin-top: 3px;
+        }
+
+        .summary-value {
+            font-family: "Syne", sans-serif;
+
+            font-size: 14px;
+        }
+
+
+        /* ========================================
+           TABLE
+        ======================================== */
+
+        .table-card {
+            margin-bottom: 25px;
+
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 700px;
+        }
+
+        th {
+            padding: 12px;
+
+            text-align: left;
+
+            color: #777783;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.8px;
+
+            border-bottom: 1px solid #25252e;
+        }
+
+        td {
+            padding: 14px 12px;
+
+            border-bottom: 1px solid #20202a;
+
+            font-size: 12px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .user-cell {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #24231a;
+
+            color: #f5c842;
+
+            border-radius: 50%;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-weight: 600;
+
+            font-size: 12px;
+        }
+
+        .user-email {
+            color: #777783;
+
+            font-size: 10px;
+
+            margin-top: 2px;
+        }
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 15px;
+
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status.active {
+            background: #172319;
+
+            color: #86d68f;
+        }
+
+        .status.pending {
+            background: #292518;
+
+            color: #e2bd56;
+        }
+
+        .status.suspended {
+            background: #251414;
+
+            color: #ff8585;
+        }
+
+        .action-btn {
+            padding: 7px 10px;
+
+            border: 1px solid #30303a;
+
+            background: #1b1b24;
+
+            color: #aaaab5;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            color: #f5c842;
+
+            border-color: #f5c842;
+        }
+
+
+        /* ========================================
+           ACTIVITY
+        ======================================== */
+
+        .activity-list {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .activity-item {
+            display: flex;
+
+            gap: 12px;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #25252e;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 35px;
+            height: 35px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #20202a;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+        }
+
+        .activity-text {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+        .activity-time {
+            color: #777783;
+
+            font-size: 10px;
+
+            margin-top: 3px;
+        }
+
+
+        /* ========================================
+           QUICK ACTIONS
+        ======================================== */
+
+        .quick-actions {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .quick-action {
+            padding: 17px;
+
+            background: #15151d;
+
+            border: 1px solid #292933;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .quick-action:hover {
+            border-color: #f5c842;
+
+            transform: translateY(-2px);
+        }
+
+        .quick-icon {
+            font-size: 20px;
+
+            margin-bottom: 9px;
+        }
+
+        .quick-title {
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .quick-description {
+            color: #777783;
+
+            font-size: 10px;
+
+            margin-top: 4px;
+        }
+
+
+        /* ========================================
+           RESPONSIVE
+        ======================================== */
+
+        @media (max-width: 1150px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .welcome-card {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+            .top-actions {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- ========================================
+         SIDEBAR
+    ======================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="admin-badge">
+            Administrator
+        </div>
+
+
+        <div class="nav-title">
+            Administration
+        </div>
+
+
+        <a
+            href="admin-dashboard.html"
+            class="nav-item active">
+
+            <span class="nav-icon">⌂</span>
+
+            Dashboard
+
+        </a>
+
+
+        <a
+            href="admin-users.html"
+            class="nav-item">
+
+            <span class="nav-icon">♙</span>
+
+            Users
+
+        </a>
+
+
+        <a
+            href="admin-datasets.html"
+            class="nav-item">
+
+            <span class="nav-icon">▦</span>
+
+            Datasets
+
+        </a>
+
+
+        <a
+            href="admin-reports.html"
+            class="nav-item">
+
+            <span class="nav-icon">▧</span>
+
+            Reports
+
+        </a>
+
+
+        <a
+            href="admin-activity.html"
+            class="nav-item">
+
+            <span class="nav-icon">◷</span>
+
+            Activity Logs
+
+        </a>
+
+
+        <div class="nav-title">
+            System
+        </div>
+
+
+        <a
+            href="settings.html"
+            class="nav-item">
+
+            <span class="nav-icon">⚙</span>
+
+            Settings
+
+        </a>
+
+
+        <a
+            href="index.html"
+            class="nav-item"
+            onclick="logout()">
+
+            <span class="nav-icon">↪</span>
+
+            Logout
+
+        </a>
+
+    </aside>
+
+
+
+    <!-- ========================================
+         MAIN
+    ======================================== -->
+
+    <main class="main">
+
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div class="page-heading">
+
+                <span
+                    class="mobile-menu"
+                    onclick="toggleSidebar()">
+
+                    ☰
+
+                </span>
+
+                <div>
+
+                    <h1 class="page-title">
+                        Admin Dashboard
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Monitor and manage your Velocity BI platform.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <div
+                    class="notification"
+                    onclick="showNotifications()">
+
+                    🔔
+
+                    <span class="notification-dot"></span>
+
+                </div>
+
+
+                <div class="admin-profile">
+
+                    <div class="admin-avatar">
+                        AD
+                    </div>
+
+                    <div>
+
+                        <div class="admin-name">
+                            Admin
+                        </div>
+
+                        <div class="admin-role">
+                            Administrator
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             WELCOME
+        ======================================== -->
+
+        <div class="welcome-card">
+
+            <div>
+
+                <h2 class="welcome-title">
+                    Welcome back, Admin 👋
+                </h2>
+
+                <p class="welcome-text">
+                    Here's what's happening across your Velocity BI platform today.
+                </p>
+
+            </div>
+
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                All Systems Operational
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             STATISTICS
+        ======================================== -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Total Users
+                    </span>
+
+                    <span class="stat-icon">
+                        👥
+                    </span>
+
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="totalUsers">
+                    1,248
+                </div>
+
+                <div class="stat-change">
+                    ↑ 12.5% this month
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Total Datasets
+                    </span>
+
+                    <span class="stat-icon">
+                        🗄️
+                    </span>
+
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="totalDatasets">
+                    3,842
+                </div>
+
+                <div class="stat-change">
+                    ↑ 8.2% this month
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Generated Reports
+                    </span>
+
+                    <span class="stat-icon">
+                        📊
+                    </span>
+
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="totalReports">
+                    6,517
+                </div>
+
+                <div class="stat-change">
+                    ↑ 15.8% this month
+                </div>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Active Users
+                    </span>
+
+                    <span class="stat-icon">
+                        ⚡
+                    </span>
+
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="activeUsers">
+                    426
+                </div>
+
+                <div class="stat-change">
+                    ↑ 5.4% today
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             CHART + SYSTEM SUMMARY
+        ======================================== -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- User Activity Chart -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Platform Activity
+                    </h2>
+
+                    <span
+                        class="view-all"
+                        onclick="changePeriod()">
+
+                        Last 7 days ▾
+
+                    </span>
+
+                </div>
+
+
+                <div class="chart-container">
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 48%;">
+
+                            <span class="bar-value">
+                                420
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Mon
+                        </span>
+
+                    </div>
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 65%;">
+
+                            <span class="bar-value">
+                                580
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Tue
+                        </span>
+
+                    </div>
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 55%;">
+
+                            <span class="bar-value">
+                                495
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Wed
+                        </span>
+
+                    </div>
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 78%;">
+
+                            <span class="bar-value">
+                                710
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Thu
+                        </span>
+
+                    </div>
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 70%;">
+
+                            <span class="bar-value">
+                                640
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Fri
+                        </span>
+
+                    </div>
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 88%;">
+
+                            <span class="bar-value">
+                                805
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Sat
+                        </span>
+
+                    </div>
+
+
+                    <div class="bar-wrapper">
+
+                        <div
+                            class="bar"
+                            style="height: 73%;">
+
+                            <span class="bar-value">
+                                675
+                            </span>
+
+                        </div>
+
+                        <span class="bar-label">
+                            Sun
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- System Summary -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        System Summary
+                    </h2>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <div class="summary-left">
+
+                        <div class="summary-icon">
+                            👤
+                        </div>
+
+                        <div>
+
+                            <div class="summary-name">
+                                New Users
+                            </div>
+
+                            <div class="summary-description">
+                                Registered this week
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="summary-value">
+                        86
+                    </div>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <div class="summary-left">
+
+                        <div class="summary-icon">
+                            📤
+                        </div>
+
+                        <div>
+
+                            <div class="summary-name">
+                                Dataset Uploads
+                            </div>
+
+                            <div class="summary-description">
+                                This week
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="summary-value">
+                        342
+                    </div>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <div class="summary-left">
+
+                        <div class="summary-icon">
+                            📈
+                        </div>
+
+                        <div>
+
+                            <div class="summary-name">
+                                Analyses
+                            </div>
+
+                            <div class="summary-description">
+                                Completed this week
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="summary-value">
+                        1,426
+                    </div>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <div class="summary-left">
+
+                        <div class="summary-icon">
+                            ⚠️
+                        </div>
+
+                        <div>
+
+                            <div class="summary-name">
+                                Pending Reviews
+                            </div>
+
+                            <div class="summary-description">
+                                Require attention
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="summary-value">
+                        14
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             RECENT USERS
+        ======================================== -->
+
+        <div class="card table-card">
+
+            <div class="card-header">
+
+                <h2 class="card-title">
+                    Recent Users
+                </h2>
+
+                <span
+                    class="view-all"
+                    onclick="viewAllUsers()">
+
+                    View All →
+
+                </span>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                User
+                            </th>
+
+                            <th>
+                                Role
+                            </th>
+
+                            <th>
+                                Datasets
+                            </th>
+
+                            <th>
+                                Reports
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Joined
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td>
+
+                                <div class="user-cell">
+
+                                    <div class="user-avatar">
+                                        RK
+                                    </div>
+
+                                    <div>
+
+                                        <div class="user-name">
+                                            Rahul Kumar
+                                        </div>
+
+                                        <div class="user-email">
+                                            rahul@example.com
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                Data Analyst
+                            </td>
+
+                            <td>
+                                24
+                            </td>
+
+                            <td>
+                                18
+                            </td>
+
+                            <td>
+                                <span class="status active">
+                                    Active
+                                </span>
+                            </td>
+
+                            <td>
+                                Sep 19, 2026
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewUser('Rahul Kumar')">
+
+                                    View
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <td>
+
+                                <div class="user-cell">
+
+                                    <div class="user-avatar">
+                                        AS
+                                    </div>
+
+                                    <div>
+
+                                        <div class="user-name">
+                                            Anjali Sharma
+                                        </div>
+
+                                        <div class="user-email">
+                                            anjali@example.com
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                Student
+                            </td>
+
+                            <td>
+                                8
+                            </td>
+
+                            <td>
+                                5
+                            </td>
+
+                            <td>
+                                <span class="status active">
+                                    Active
+                                </span>
+                            </td>
+
+                            <td>
+                                Sep 18, 2026
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewUser('Anjali Sharma')">
+
+                                    View
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <td>
+
+                                <div class="user-cell">
+
+                                    <div class="user-avatar">
+                                        VP
+                                    </div>
+
+                                    <div>
+
+                                        <div class="user-name">
+                                            Vikram Patel
+                                        </div>
+
+                                        <div class="user-email">
+                                            vikram@example.com
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                Developer
+                            </td>
+
+                            <td>
+                                31
+                            </td>
+
+                            <td>
+                                22
+                            </td>
+
+                            <td>
+                                <span class="status pending">
+                                    Pending
+                                </span>
+                            </td>
+
+                            <td>
+                                Sep 18, 2026
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewUser('Vikram Patel')">
+
+                                    Review
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+
+                        <tr>
+
+                            <td>
+
+                                <div class="user-cell">
+
+                                    <div class="user-avatar">
+                                        NM
+                                    </div>
+
+                                    <div>
+
+                                        <div class="user-name">
+                                            Neha Mehta
+                                        </div>
+
+                                        <div class="user-email">
+                                            neha@example.com
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                BI Analyst
+                            </td>
+
+                            <td>
+                                16
+                            </td>
+
+                            <td>
+                                12
+                            </td>
+
+                            <td>
+                                <span class="status active">
+                                    Active
+                                </span>
+                            </td>
+
+                            <td>
+                                Sep 17, 2026
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="action-btn"
+                                    onclick="viewUser('Neha Mehta')">
+
+                                    View
+
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================
+             ACTIVITY + QUICK ACTIONS
+        ======================================== -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- Activity -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Recent Activity
+                    </h2>
+
+                    <span
+                        class="view-all"
+                        onclick="viewActivity()">
+
+                        View Logs →
+
+                    </span>
+
+                </div>
+
+
+                <div class="activity-list">
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            👤
+                        </div>
+
+                        <div class="activity-text">
+
+                            <div class="activity-title">
+                                New user <strong>Rahul Kumar</strong> registered.
+                            </div>
+
+                            <div class="activity-time">
+                                12 minutes ago
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            📤
+                        </div>
+
+                        <div class="activity-text">
+
+                            <div class="activity-title">
+                                Dataset <strong>Sales_2026.csv</strong> uploaded.
+                            </div>
+
+                            <div class="activity-time">
+                                35 minutes ago
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            📊
+                        </div>
+
+                        <div class="activity-text">
+
+                            <div class="activity-title">
+                                New dashboard generated by <strong>Neha Mehta</strong>.
+                            </div>
+
+                            <div class="activity-time">
+                                1 hour ago
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            ⚠️
+                        </div>
+
+                        <div class="activity-text">
+
+                            <div class="activity-title">
+                                User <strong>Vikram Patel</strong> requires account review.
+                            </div>
+
+                            <div class="activity-time">
+                                2 hours ago
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Quick Actions -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Quick Actions
+                    </h2>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+
+                    <div
+                        class="quick-action"
+                        onclick="goTo('admin-users.html')">
+
+                        <div class="quick-icon">
+                            👥
+                        </div>
+
+                        <div class="quick-title">
+                            Manage Users
+                        </div>
+
+                        <div class="quick-description">
+                            View and manage accounts
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="quick-action"
+                        onclick="goTo('admin-datasets.html')">
+
+                        <div class="quick-icon">
+                            🗄️
+                        </div>
+
+                        <div class="quick-title">
+                            Datasets
+                        </div>
+
+                        <div class="quick-description">
+                            Manage uploaded data
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="quick-action"
+                        onclick="goTo('admin-reports.html')">
+
+                        <div class="quick-icon">
+                            📊
+                        </div>
+
+                        <div class="quick-title">
+                            Reports
+                        </div>
+
+                        <div class="quick-description">
+                            Review generated reports
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="quick-action"
+                        onclick="goTo('settings.html')">
+
+                        <div class="quick-icon">
+                            ⚙️
+                        </div>
+
+                        <div class="quick-title">
+                            Settings
+                        </div>
+
+                        <div class="quick-description">
+                            Configure platform
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- ========================================
+         JAVASCRIPT
+    ======================================== -->
+
+    <script>
+
+
+        // ========================================
+        // MOBILE SIDEBAR
+        // ========================================
+
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList.toggle("open");
+
+        }
+
+
+        // ========================================
+        // NOTIFICATIONS
+        // ========================================
+
+        function showNotifications() {
+
+            alert(
+                "You have 3 new admin notifications."
+            );
+
+        }
+
+
+        // ========================================
+        // PERIOD
+        // ========================================
+
+        function changePeriod() {
+
+            alert(
+                "Chart period selector will be connected to your analytics API."
+            );
+
+        }
+
+
+        // ========================================
+        // VIEW USER
+        // ========================================
+
+        function viewUser(name) {
+
+            alert(
+                "Opening user profile for: " + name
+            );
+
+        }
+
+
+        // ========================================
+        // VIEW ALL USERS
+        // ========================================
+
+        function viewAllUsers() {
+
+            window.location.href =
+                "admin-users.html";
+
+        }
+
+
+        // ========================================
+        // ACTIVITY LOGS
+        // ========================================
+
+        function viewActivity() {
+
+            window.location.href =
+                "admin-activity.html";
+
+        }
+
+
+        // ========================================
+        // QUICK NAVIGATION
+        // ========================================
+
+        function goTo(page) {
+
+            window.location.href = page;
+
+        }
+
+
+        // ========================================
+        // LOGOUT
+        // ========================================
+
+        function logout() {
+
+            localStorage.removeItem(
+                "velocityAdmin"
+            );
+
+            sessionStorage.removeItem(
+                "velocityAdmin"
+            );
+
+        }
+
+
+        // ========================================
+        // ADMIN AUTH CHECK
+        // ========================================
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                /*
+                 * Demo authentication check.
+                 *
+                 * When Flask + JWT is connected,
+                 * replace this with a backend
+                 * authentication check.
+                 */
+
+                const localAdmin =
+                    localStorage.getItem(
+                        "velocityAdmin"
+                    );
+
+                const sessionAdmin =
+                    sessionStorage.getItem(
+                        "velocityAdmin"
+                    );
+
+
+                /*
+                 * Uncomment this section when
+                 * you want to protect the page
+                 * during frontend testing.
+                 *
+                 * if (!localAdmin && !sessionAdmin) {
+                 *
+                 *     window.location.href =
+                 *         "admin-login.html";
+                 *
+                 * }
+                 */
+
+            }
+        );
+
+
+        // ========================================
+        // DEMO STAT REFRESH
+        // ========================================
+
+        function updateStats() {
+
+            /*
+             * Later connect these values
+             * to your Flask API:
+             *
+             * GET /api/admin/statistics
+             */
+
+            console.log(
+                "Admin statistics loaded."
+            );
+
+        }
+
+        updateStats();
+
+    </script>
+
+</body>
+</html>
+```

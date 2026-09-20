@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard Builder | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #292933;
+            padding: 25px 15px;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #f5c842;
+            padding: 0 15px 30px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 15px;
+            margin: 5px 0;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1d1d27;
+            color: #f5c842;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        /* ================= TOP BAR ================= */
+
+        .topbar {
+            height: 75px;
+            background: #111118;
+            border-bottom: 1px solid #292933;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+        }
+
+        .page-title p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #f5c842;
+            color: #111;
+        }
+
+        .btn-secondary {
+            background: #20202a;
+            color: #fff;
+            border: 1px solid #33333e;
+        }
+
+        .btn-danger {
+            background: #2a1717;
+            color: #ff7777;
+            border: 1px solid #4a2424;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= BUILDER ================= */
+
+        .builder {
+            display: flex;
+            min-height: calc(100vh - 75px);
+        }
+
+        /* ================= TOOLBOX ================= */
+
+        .toolbox {
+            width: 250px;
+            background: #101016;
+            border-right: 1px solid #292933;
+            padding: 20px;
+        }
+
+        .toolbox h2 {
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .toolbox-description {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .tool-section {
+            margin-bottom: 25px;
+        }
+
+        .tool-section h3 {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .widget-option {
+            background: #191922;
+            border: 1px solid #30303b;
+            border-radius: 8px;
+            padding: 13px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .widget-option:hover {
+            border-color: #f5c842;
+            transform: translateX(3px);
+        }
+
+        .widget-icon {
+            font-size: 19px;
+            margin-right: 8px;
+        }
+
+        .widget-name {
+            font-size: 13px;
+        }
+
+        /* ================= CANVAS ================= */
+
+        .canvas-area {
+            flex: 1;
+            padding: 25px;
+            overflow: auto;
+        }
+
+        .canvas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .canvas-header h2 {
+            font-size: 18px;
+        }
+
+        .canvas-header span {
+            color: #777;
+            font-size: 12px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 15px;
+            min-height: 650px;
+            padding: 10px;
+            border: 1px dashed #35353f;
+            border-radius: 12px;
+            background:
+                linear-gradient(
+                    rgba(255,255,255,0.015) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.015) 1px,
+                    transparent 1px
+                );
+            background-size: 50px 50px;
+        }
+
+        /* ================= WIDGET ================= */
+
+        .dashboard-widget {
+            position: relative;
+            background: #111118;
+            border: 1px solid #292933;
+            border-radius: 10px;
+            padding: 18px;
+            min-height: 170px;
+            overflow: hidden;
+        }
+
+        .dashboard-widget:hover {
+            border-color: #555562;
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .widget-header h3 {
+            font-size: 14px;
+        }
+
+        .widget-menu {
+            display: flex;
+            gap: 5px;
+        }
+
+        .widget-menu button {
+            background: transparent;
+            color: #777;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .widget-menu button:hover {
+            color: #f5c842;
+        }
+
+        /* ================= GRID SIZES ================= */
+
+        .size-full {
+            grid-column: span 12;
+        }
+
+        .size-half {
+            grid-column: span 6;
+        }
+
+        .size-third {
+            grid-column: span 4;
+        }
+
+        .size-quarter {
+            grid-column: span 3;
+        }
+
+        /* ================= KPI ================= */
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .kpi-change {
+            margin-top: 8px;
+            color: #4ade80;
+            font-size: 13px;
+        }
+
+        /* ================= CHART ================= */
+
+        .chart-container {
+            height: 230px;
+            position: relative;
+        }
+
+        /* ================= TABLE ================= */
+
+        .mini-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .mini-table th,
+        .mini-table td {
+            padding: 9px;
+            border-bottom: 1px solid #292933;
+            text-align: left;
+            font-size: 12px;
+        }
+
+        .mini-table th {
+            color: #f5c842;
+        }
+
+        .mini-table td {
+            color: #aaa;
+        }
+
+        /* ================= FILTER ================= */
+
+        .filter-box {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-box select {
+            background: #191922;
+            border: 1px solid #33333e;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty-state {
+            grid-column: span 12;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #666;
+        }
+
+        .empty-state div {
+            max-width: 400px;
+        }
+
+        .empty-state-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h2 {
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+
+        /* ================= MODAL ================= */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            width: 400px;
+            background: #15151d;
+            border: 1px solid #33333e;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            background: #0e0e14;
+            border: 1px solid #33333e;
+            color: #fff;
+            padding: 11px;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 1100px) {
+
+            .toolbox {
+                width: 210px;
+            }
+
+            .size-quarter {
+                grid-column: span 6;
+            }
+
+            .size-third {
+                grid-column: span 6;
+            }
+        }
+
+        @media(max-width: 750px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .builder {
+                flex-direction: column;
+            }
+
+            .toolbox {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #292933;
+            }
+
+            .canvas-area {
+                padding: 15px;
+            }
+
+            .topbar {
+                height: auto;
+                padding: 15px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .top-actions {
+                flex-wrap: wrap;
+            }
+
+            .size-half,
+            .size-third,
+            .size-quarter {
+                grid-column: span 12;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity BI
+        </div>
+
+        <a href="dashboard.html" class="nav-link">
+            📊 Dashboard
+        </a>
+
+        <a href="dataset-upload.html" class="nav-link">
+            📁 Upload Dataset
+        </a>
+
+        <a href="dataset-preview.html" class="nav-link">
+            👁 Dataset Preview
+        </a>
+
+        <a href="data-cleaning.html" class="nav-link">
+            🧹 Data Cleaning
+        </a>
+
+        <a href="eda.html" class="nav-link">
+            🔍 EDA
+        </a>
+
+        <a href="visualization.html" class="nav-link">
+            📈 Visualization
+        </a>
+
+        <a href="correlation-analysis.html" class="nav-link">
+            🔗 Correlation
+        </a>
+
+        <a href="time-series.html" class="nav-link">
+            ⏱ Time Series
+        </a>
+
+        <a href="forecasting.html" class="nav-link">
+            🔮 Forecasting
+        </a>
+
+        <a href="dashboard-builder.html" class="nav-link active">
+            🧩 Dashboard Builder
+        </a>
+
+        <a href="index.html" class="nav-link">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+
+                <h1>Dashboard Builder</h1>
+
+                <p>
+                    Create your own interactive BI dashboard
+                </p>
+
+            </div>
+
+            <div class="top-actions">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="clearDashboard()">
+
+                    Clear
+
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="loadDemo()">
+
+                    Load Demo
+
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="saveDashboard()">
+
+                    💾 Save
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="exportDashboard()">
+
+                    ⬇ Export
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= BUILDER ================= -->
+
+        <div class="builder">
+
+
+            <!-- ================= TOOLBOX ================= -->
+
+            <aside class="toolbox">
+
+                <h2>Components</h2>
+
+                <p class="toolbox-description">
+                    Click a component to add it to your dashboard.
+                </p>
+
+
+                <div class="tool-section">
+
+                    <h3>Metrics</h3>
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('kpi')">
+
+                        <span class="widget-icon">
+                            🔢
+                        </span>
+
+                        <span class="widget-name">
+                            KPI Card
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tool-section">
+
+                    <h3>Charts</h3>
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('line')">
+
+                        <span class="widget-icon">
+                            📈
+                        </span>
+
+                        <span class="widget-name">
+                            Line Chart
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('bar')">
+
+                        <span class="widget-icon">
+                            📊
+                        </span>
+
+                        <span class="widget-name">
+                            Bar Chart
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('pie')">
+
+                        <span class="widget-icon">
+                            🥧
+                        </span>
+
+                        <span class="widget-name">
+                            Pie Chart
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('area')">
+
+                        <span class="widget-icon">
+                            📉
+                        </span>
+
+                        <span class="widget-name">
+                            Area Chart
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tool-section">
+
+                    <h3>Data</h3>
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('table')">
+
+                        <span class="widget-icon">
+                            📋
+                        </span>
+
+                        <span class="widget-name">
+                            Data Table
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="widget-option"
+                        onclick="addWidget('filter')">
+
+                        <span class="widget-icon">
+                            🔽
+                        </span>
+
+                        <span class="widget-name">
+                            Filter
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+
+            <!-- ================= CANVAS ================= -->
+
+            <section class="canvas-area">
+
+                <div class="canvas-header">
+
+                    <h2>
+                        My Analytics Dashboard
+                    </h2>
+
+                    <span>
+                        Click components to add widgets
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="dashboardGrid"
+                    class="dashboard-grid">
+
+                    <div
+                        class="empty-state"
+                        id="emptyState">
+
+                        <div>
+
+                            <div class="empty-state-icon">
+                                🧩
+                            </div>
+
+                            <h2>
+                                Start Building
+                            </h2>
+
+                            <p>
+                                Select a component from the
+                                left panel to add it to your
+                                dashboard.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= EDIT MODAL ================= -->
+
+    <div
+        class="modal"
+        id="editModal">
+
+        <div class="modal-content">
+
+            <h2>
+                Edit Widget
+            </h2>
+
+            <div class="form-group">
+
+                <label>
+                    Widget Title
+                </label>
+
+                <input
+                    type="text"
+                    id="widgetTitle">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Widget Size
+                </label>
+
+                <select id="widgetSize">
+
+                    <option value="size-quarter">
+                        Quarter Width
+                    </option>
+
+                    <option value="size-third">
+                        One Third
+                    </option>
+
+                    <option value="size-half">
+                        Half Width
+                    </option>
+
+                    <option value="size-full">
+                        Full Width
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="closeModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="applyChanges()">
+
+                    Apply
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        let widgetCounter = 0;
+
+        let editingWidget = null;
+
+        let charts = {};
+
+
+        /* ================= SAMPLE DATA ================= */
+
+        const months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ];
+
+        const sales = [
+            42000,
+            48000,
+            51000,
+            47000,
+            58000,
+            62000,
+            69000,
+            72000,
+            68000,
+            85000,
+            78000,
+            90000
+        ];
+
+
+        /* ================= ADD WIDGET ================= */
+
+        function addWidget(type) {
+
+            const grid =
+                document.getElementById(
+                    "dashboardGrid"
+                );
+
+
+            const empty =
+                document.getElementById(
+                    "emptyState"
+                );
+
+
+            if (empty) {
+                empty.remove();
+            }
+
+
+            widgetCounter++;
+
+
+            const widget =
+                document.createElement("div");
+
+
+            widget.className =
+                "dashboard-widget size-half";
+
+
+            widget.id =
+                "widget-" +
+                widgetCounter;
+
+
+            widget.innerHTML =
+                createWidgetHTML(
+                    type,
+                    widgetCounter
+                );
+
+
+            grid.appendChild(widget);
+
+
+            if (
+                type === "line" ||
+                type === "bar" ||
+                type === "pie" ||
+                type === "area"
+            ) {
+
+                createChart(
+                    type,
+                    widgetCounter
+                );
+
+            }
+
+        }
+
+
+        /* ================= WIDGET HTML ================= */
+
+        function createWidgetHTML(
+            type,
+            id
+        ) {
+
+            let title =
+                "Widget";
+
+
+            if (type === "kpi")
+                title = "Total Sales";
+
+            if (type === "line")
+                title = "Sales Trend";
+
+            if (type === "bar")
+                title = "Monthly Sales";
+
+            if (type === "pie")
+                title = "Sales Distribution";
+
+            if (type === "area")
+                title = "Revenue Trend";
+
+            if (type === "table")
+                title = "Sales Data";
+
+            if (type === "filter")
+                title = "Dashboard Filters";
+
+
+            let content = "";
+
+
+            /* KPI */
+
+            if (type === "kpi") {
+
+                content = `
+
+                    <div class="kpi-value">
+                        ₹8.42L
+                    </div>
+
+                    <div class="kpi-change">
+                        ↑ 18.6% compared to previous period
+                    </div>
+
+                `;
+
+            }
+
+
+            /* Charts */
+
+            else if (
+                type === "line" ||
+                type === "bar" ||
+                type === "pie" ||
+                type === "area"
+            ) {
+
+                content = `
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="chart-${id}">
+                        </canvas>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /* Table */
+
+            else if (type === "table") {
+
+                content = `
+
+                    <table class="mini-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Month</th>
+                                <th>Sales</th>
+                                <th>Growth</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Jan</td>
+                                <td>₹42,000</td>
+                                <td>+4.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td>Feb</td>
+                                <td>₹48,000</td>
+                                <td>+14.3%</td>
+                            </tr>
+
+                            <tr>
+                                <td>Mar</td>
+                                <td>₹51,000</td>
+                                <td>+6.2%</td>
+                            </tr>
+
+                            <tr>
+                                <td>Apr</td>
+                                <td>₹47,000</td>
+                                <td>-7.8%</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                `;
+
+            }
+
+
+            /* Filter */
+
+            else if (type === "filter") {
+
+                content = `
+
+                    <div class="filter-box">
+
+                        <select>
+
+                            <option>
+                                All Regions
+                            </option>
+
+                            <option>
+                                North
+                            </option>
+
+                            <option>
+                                South
+                            </option>
+
+                            <option>
+                                East
+                            </option>
+
+                            <option>
+                                West
+                            </option>
+
+                        </select>
+
+
+                        <select>
+
+                            <option>
+                                All Products
+                            </option>
+
+                            <option>
+                                Product A
+                            </option>
+
+                            <option>
+                                Product B
+                            </option>
+
+                            <option>
+                                Product C
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            return `
+
+                <div class="widget-header">
+
+                    <h3>
+                        ${title}
+                    </h3>
+
+                    <div class="widget-menu">
+
+                        <button
+                            onclick="editWidget('${id}')"
+                            title="Edit">
+
+                            ✏️
+
+                        </button>
+
+                        <button
+                            onclick="duplicateWidget('${id}')"
+                            title="Duplicate">
+
+                            ⧉
+
+                        </button>
+
+                        <button
+                            onclick="deleteWidget('${id}')"
+                            title="Delete">
+
+                            ×
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="widget-content">
+
+                    ${content}
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* ================= CREATE CHART ================= */
+
+        function createChart(
+            type,
+            id
+        ) {
+
+            const canvas =
+                document.getElementById(
+                    "chart-" + id
+                );
+
+
+            if (!canvas)
+                return;
+
+
+            let chartType =
+                type;
+
+
+            if (type === "area") {
+                chartType = "line";
+            }
+
+
+            let chartData;
+
+
+            if (type === "pie") {
+
+                chartData = {
+
+                    labels: [
+                        "Product A",
+                        "Product B",
+                        "Product C",
+                        "Product D"
+                    ],
+
+                    datasets: [{
+
+                        data: [
+                            35,
+                            25,
+                            20,
+                            20
+                        ],
+
+                        borderWidth: 1
+
+                    }]
+
+                };
+
+            }
+
+            else {
+
+                chartData = {
+
+                    labels: months,
+
+                    datasets: [{
+
+                        label: "Sales",
+
+                        data: sales,
+
+                        borderWidth: 2,
+
+                        tension: 0.35,
+
+                        fill:
+                            type === "area"
+
+                    }]
+
+                };
+
+            }
+
+
+            charts[id] =
+                new Chart(
+                    canvas,
+                    {
+
+                        type: chartType,
+
+                        data: chartData,
+
+                        options: {
+
+                            responsive: true,
+
+                            maintainAspectRatio:
+                                false,
+
+                            plugins: {
+
+                                legend: {
+
+                                    labels: {
+                                        color: "#fff"
+                                    }
+
+                                }
+
+                            },
+
+                            scales:
+                                type === "pie"
+                                    ? {}
+                                    : {
+
+                                        x: {
+
+                                            ticks: {
+                                                color: "#888"
+                                            },
+
+                                            grid: {
+                                                color:
+                                                    "rgba(255,255,255,0.05)"
+                                            }
+
+                                        },
+
+                                        y: {
+
+                                            ticks: {
+
+                                                color:
+                                                    "#888",
+
+                                                callback:
+                                                    function(value) {
+
+                                                        return "₹" +
+                                                            value /
+                                                            1000 +
+                                                            "K";
+
+                                                    }
+
+                                            },
+
+                                            grid: {
+
+                                                color:
+                                                    "rgba(255,255,255,0.05)"
+
+                                            }
+
+                                        }
+
+                                    }
+
+                        }
+
+                    }
+                );
+
+        }
+
+
+        /* ================= DELETE ================= */
+
+        function deleteWidget(id) {
+
+            const widget =
+                document.getElementById(id);
+
+
+            if (!widget)
+                return;
+
+
+            if (charts[id]) {
+
+                charts[id].destroy();
+
+                delete charts[id];
+
+            }
+
+
+            widget.remove();
+
+
+            checkEmpty();
+
+        }
+
+
+        /* ================= DUPLICATE ================= */
+
+        function duplicateWidget(id) {
+
+            const original =
+                document.getElementById(id);
+
+
+            if (!original)
+                return;
+
+
+            const clone =
+                original.cloneNode(true);
+
+
+            widgetCounter++;
+
+
+            const newId =
+                "widget-" +
+                widgetCounter;
+
+
+            clone.id = newId;
+
+
+            /*
+             * Give cloned chart a new canvas ID.
+             */
+
+            const oldCanvas =
+                clone.querySelector("canvas");
+
+
+            if (oldCanvas) {
+
+                oldCanvas.id =
+                    "chart-" +
+                    widgetCounter;
+
+            }
+
+
+            const editButton =
+                clone.querySelector(
+                    "button[title='Edit']"
+                );
+
+
+            if (editButton) {
+
+                editButton.setAttribute(
+                    "onclick",
+                    `editWidget('${newId}')`
+                );
+
+            }
+
+
+            const duplicateButton =
+                clone.querySelector(
+                    "button[title='Duplicate']"
+                );
+
+
+            if (duplicateButton) {
+
+                duplicateButton.setAttribute(
+                    "onclick",
+                    `duplicateWidget('${newId}')`
+                );
+
+            }
+
+
+            const deleteButton =
+                clone.querySelector(
+                    "button[title='Delete']"
+                );
+
+
+            if (deleteButton) {
+
+                deleteButton.setAttribute(
+                    "onclick",
+                    `deleteWidget('${newId}')`
+                );
+
+            }
+
+
+            document
+                .getElementById(
+                    "dashboardGrid"
+                )
+                .appendChild(clone);
+
+
+            if (oldCanvas) {
+
+                const chartType =
+                    original
+                    .querySelector("canvas")
+                    ? "line"
+                    : null;
+
+                if (chartType) {
+
+                    createChart(
+                        "line",
+                        widgetCounter
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /* ================= EDIT ================= */
+
+        function editWidget(id) {
+
+            const widget =
+                document.getElementById(id);
+
+
+            if (!widget)
+                return;
+
+
+            editingWidget = id;
+
+
+            document.getElementById(
+                "widgetTitle"
+            ).value =
+                widget.querySelector(
+                    ".widget-header h3"
+                ).textContent.trim();
+
+
+            document.getElementById(
+                "widgetSize"
+            ).value =
+                [...widget.classList]
+                .find(
+                    c =>
+                        c.startsWith("size-")
+                ) ||
+                "size-half";
+
+
+            document.getElementById(
+                "editModal"
+            ).style.display =
+                "flex";
+
+        }
+
+
+        /* ================= APPLY EDIT ================= */
+
+        function applyChanges() {
+
+            if (!editingWidget)
+                return;
+
+
+            const widget =
+                document.getElementById(
+                    editingWidget
+                );
+
+
+            const title =
+                document.getElementById(
+                    "widgetTitle"
+                ).value;
+
+
+            const size =
+                document.getElementById(
+                    "widgetSize"
+                ).value;
+
+
+            widget.querySelector(
+                ".widget-header h3"
+            ).textContent =
+                title;
+
+
+            widget.classList.remove(
+                "size-quarter",
+                "size-third",
+                "size-half",
+                "size-full"
+            );
+
+
+            widget.classList.add(size);
+
+
+            closeModal();
+
+        }
+
+
+        /* ================= CLOSE MODAL ================= */
+
+        function closeModal() {
+
+            document.getElementById(
+                "editModal"
+            ).style.display =
+                "none";
+
+            editingWidget = null;
+
+        }
+
+
+        /* ================= CLEAR ================= */
+
+        function clearDashboard() {
+
+            if (
+                !confirm(
+                    "Clear the entire dashboard?"
+                )
+            ) {
+                return;
+            }
+
+
+            Object.keys(charts).forEach(
+                id => {
+
+                    if (charts[id]) {
+                        charts[id].destroy();
+                    }
+
+                }
+            );
+
+
+            charts = {};
+
+
+            document.getElementById(
+                "dashboardGrid"
+            ).innerHTML = `
+
+                <div
+                    class="empty-state"
+                    id="emptyState">
+
+                    <div>
+
+                        <div class="empty-state-icon">
+                            🧩
+                        </div>
+
+                        <h2>
+                            Start Building
+                        </h2>
+
+                        <p>
+                            Select a component from the
+                            left panel to add it to your
+                            dashboard.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* ================= DEMO DASHBOARD ================= */
+
+        function loadDemo() {
+
+            clearWithoutConfirmation();
+
+
+            addWidget("kpi");
+            addWidget("kpi");
+            addWidget("kpi");
+            addWidget("kpi");
+
+            addWidget("line");
+            addWidget("bar");
+
+            addWidget("pie");
+            addWidget("table");
+
+        }
+
+
+        function clearWithoutConfirmation() {
+
+            Object.keys(charts).forEach(
+                id => {
+
+                    if (charts[id]) {
+                        charts[id].destroy();
+                    }
+
+                }
+            );
+
+
+            charts = {};
+
+
+            document.getElementById(
+                "dashboardGrid"
+            ).innerHTML = "";
+
+        }
+
+
+        /* ================= EMPTY CHECK ================= */
+
+        function checkEmpty() {
+
+            const grid =
+                document.getElementById(
+                    "dashboardGrid"
+                );
+
+
+            if (
+                grid.querySelector(
+                    ".dashboard-widget"
+                )
+            ) {
+                return;
+            }
+
+
+            grid.innerHTML = `
+
+                <div
+                    class="empty-state"
+                    id="emptyState">
+
+                    <div>
+
+                        <div class="empty-state-icon">
+                            🧩
+                        </div>
+
+                        <h2>
+                            Start Building
+                        </h2>
+
+                        <p>
+                            Select a component from the
+                            left panel to add widgets.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* ================= SAVE ================= */
+
+        function saveDashboard() {
+
+            const widgets =
+                document.querySelectorAll(
+                    ".dashboard-widget"
+                );
+
+
+            const dashboard = [];
+
+
+            widgets.forEach(
+                widget => {
+
+                    dashboard.push({
+
+                        id: widget.id,
+
+                        title:
+                            widget.querySelector(
+                                ".widget-header h3"
+                            ).textContent.trim(),
+
+                        size:
+                            [...widget.classList]
+                            .find(
+                                c =>
+                                    c.startsWith(
+                                        "size-"
+                                    )
+                            )
+
+                    });
+
+                }
+            );
+
+
+            localStorage.setItem(
+                "velocityBI_dashboard",
+                JSON.stringify(
+                    dashboard
+                )
+            );
+
+
+            alert(
+                "Dashboard saved successfully!"
+            );
+
+        }
+
+
+        /* ================= EXPORT ================= */
+
+        function exportDashboard() {
+
+            const dashboard =
+                document.getElementById(
+                    "dashboardGrid"
+                ).innerHTML;
+
+
+            const file =
+                new Blob(
+                    [
+                        `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>
+                                Velocity BI Dashboard
+                            </title>
+                        </head>
+                        <body>
+                            ${dashboard}
+                        </body>
+                        </html>
+                        `
+                    ],
+                    {
+                        type:
+                            "text/html"
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(file);
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.href = url;
+
+            link.download =
+                "velocity-bi-dashboard.html";
+
+
+            link.click();
+
+
+            URL.revokeObjectURL(url);
+
+        }
+
+
+        /* ================= LOAD SAVED ================= */
+
+        window.onload =
+            function() {
+
+                /*
+                 * Demo dashboard is loaded
+                 * automatically for preview.
+                 */
+
+                loadDemo();
+
+            };
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Forecasting | Velocity BI</title>
+
+    <!-- Chart.js -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #292933;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #f5c842;
+            padding: 0 15px 30px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 15px;
+            margin: 5px 0;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1d1d27;
+            color: #f5c842;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+        }
+
+        .header p {
+            color: #888;
+            margin-top: 7px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #111;
+            background: #f5c842;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        /* ================= SETTINGS ================= */
+
+        .settings {
+            background: #111118;
+            border: 1px solid #292933;
+            padding: 22px;
+            border-radius: 12px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control label {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        select,
+        input {
+            background: #191922;
+            color: white;
+            border: 1px solid #33333e;
+            padding: 11px 14px;
+            border-radius: 7px;
+            min-width: 180px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #f5c842;
+        }
+
+        .forecast-btn {
+            align-self: end;
+            padding: 11px 22px;
+            background: #f5c842;
+            color: #111;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .forecast-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= KPI CARDS ================= */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #111118;
+            border: 1px solid #292933;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .card-title {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .positive {
+            color: #4ade80;
+        }
+
+        .negative {
+            color: #ff6b6b;
+        }
+
+        /* ================= CHART ================= */
+
+        .chart-box {
+            background: #111118;
+            border: 1px solid #292933;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h2 {
+            font-size: 20px;
+        }
+
+        .chart-header span {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 430px;
+        }
+
+        /* ================= MODEL INFO ================= */
+
+        .model-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: #111118;
+            border: 1px solid #292933;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #f5c842;
+        }
+
+        .info-box p {
+            color: #aaa;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-box {
+            background: #111118;
+            border: 1px solid #292933;
+            border-radius: 12px;
+            padding: 25px;
+            overflow-x: auto;
+        }
+
+        .table-box h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #292933;
+        }
+
+        th {
+            color: #f5c842;
+            font-size: 13px;
+        }
+
+        td {
+            color: #ccc;
+        }
+
+        tr:hover {
+            background: #181820;
+        }
+
+        /* ================= LOADING ================= */
+
+        .loading {
+            display: none;
+            color: #f5c842;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .model-info {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .settings {
+                flex-direction: column;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity BI
+        </div>
+
+        <a href="dashboard.html" class="nav-link">
+            📊 Dashboard
+        </a>
+
+        <a href="dataset-upload.html" class="nav-link">
+            📁 Upload Dataset
+        </a>
+
+        <a href="dataset-preview.html" class="nav-link">
+            👁 Dataset Preview
+        </a>
+
+        <a href="data-cleaning.html" class="nav-link">
+            🧹 Data Cleaning
+        </a>
+
+        <a href="eda.html" class="nav-link">
+            🔍 EDA
+        </a>
+
+        <a href="visualization.html" class="nav-link">
+            📈 Visualization
+        </a>
+
+        <a href="correlation-analysis.html" class="nav-link">
+            🔗 Correlation
+        </a>
+
+        <a href="time-series.html" class="nav-link">
+            ⏱ Time Series
+        </a>
+
+        <a href="forecasting.html" class="nav-link active">
+            🔮 Forecasting
+        </a>
+
+        <a href="index.html" class="nav-link">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div>
+
+                <h1>Forecasting</h1>
+
+                <p>
+                    Predict future trends using historical data
+                </p>
+
+            </div>
+
+            <a href="dashboard.html" class="back-btn">
+                ← Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- ================= FORECAST SETTINGS ================= -->
+
+        <section class="settings">
+
+            <div class="control">
+
+                <label>Time Column</label>
+
+                <select id="timeColumn">
+
+                    <option value="date">
+                        Date
+                    </option>
+
+                    <option value="month">
+                        Month
+                    </option>
+
+                    <option value="year">
+                        Year
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="control">
+
+                <label>Target Variable</label>
+
+                <select id="target">
+
+                    <option value="sales">
+                        Sales
+                    </option>
+
+                    <option value="revenue">
+                        Revenue
+                    </option>
+
+                    <option value="profit">
+                        Profit
+                    </option>
+
+                    <option value="customers">
+                        Customers
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="control">
+
+                <label>Forecast Period</label>
+
+                <select id="forecastPeriod">
+
+                    <option value="3">
+                        3 Months
+                    </option>
+
+                    <option value="6">
+                        6 Months
+                    </option>
+
+                    <option value="12" selected>
+                        12 Months
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="control">
+
+                <label>Forecast Model</label>
+
+                <select id="model">
+
+                    <option value="arima">
+                        ARIMA
+                    </option>
+
+                    <option value="moving">
+                        Moving Average
+                    </option>
+
+                    <option value="linear">
+                        Linear Regression
+                    </option>
+
+                    <option value="exponential">
+                        Exponential Smoothing
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                class="forecast-btn"
+                onclick="generateForecast()">
+
+                Generate Forecast
+
+            </button>
+
+            <div class="loading" id="loading">
+                Generating forecast...
+            </div>
+
+        </section>
+
+
+        <!-- ================= KPI CARDS ================= -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <div class="card-title">
+                    Forecasted Value
+                </div>
+
+                <div
+                    class="card-value"
+                    id="forecastValue">
+
+                    ₹1.08L
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Expected Growth
+                </div>
+
+                <div
+                    class="card-value positive"
+                    id="growth">
+
+                    +21.4%
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Model Accuracy
+                </div>
+
+                <div
+                    class="card-value"
+                    id="accuracy">
+
+                    92.8%
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Forecast Horizon
+                </div>
+
+                <div
+                    class="card-value"
+                    id="horizon">
+
+                    12 Months
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CHART ================= -->
+
+        <section class="chart-box">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h2>
+                        Historical vs Forecast
+                    </h2>
+
+                    <span id="chartDescription">
+                        Sales forecast using ARIMA
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="forecastChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MODEL INFORMATION ================= -->
+
+        <section class="model-info">
+
+            <div class="info-box">
+
+                <h3>
+                    Selected Model
+                </h3>
+
+                <p id="modelName">
+                    ARIMA
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    Trend
+                </h3>
+
+                <p id="trend">
+                    Upward trend detected in historical data.
+                </p>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <h3>
+                    Forecast Interpretation
+                </h3>
+
+                <p id="interpretation">
+                    The model predicts continued growth
+                    over the forecast period.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= TABLE ================= -->
+
+        <section class="table-box">
+
+            <h2>
+                Forecast Results
+            </h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Period
+                        </th>
+
+                        <th>
+                            Historical
+                        </th>
+
+                        <th>
+                            Forecast
+                        </th>
+
+                        <th>
+                            Lower Bound
+                        </th>
+
+                        <th>
+                            Upper Bound
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="forecastTable">
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        let forecastChart;
+
+
+        /* Historical data */
+
+        const historicalLabels = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ];
+
+
+        const historicalSales = [
+            42000,
+            48000,
+            51000,
+            47000,
+            58000,
+            62000,
+            69000,
+            72000,
+            68000,
+            85000,
+            78000,
+            90000
+        ];
+
+
+        const historicalRevenue = [
+            65000,
+            71000,
+            76000,
+            72000,
+            81000,
+            88000,
+            92000,
+            97000,
+            93000,
+            112000,
+            106000,
+            125000
+        ];
+
+
+        const historicalProfit = [
+            15000,
+            17000,
+            19000,
+            18000,
+            22000,
+            24000,
+            27000,
+            29000,
+            26000,
+            35000,
+            32000,
+            39000
+        ];
+
+
+        const historicalCustomers = [
+            120,
+            135,
+            145,
+            138,
+            160,
+            175,
+            190,
+            205,
+            198,
+            235,
+            220,
+            250
+        ];
+
+
+        /* ================= GET DATA ================= */
+
+        function getHistoricalData() {
+
+            const target =
+                document.getElementById("target").value;
+
+
+            if (target === "sales") {
+                return historicalSales;
+            }
+
+            if (target === "revenue") {
+                return historicalRevenue;
+            }
+
+            if (target === "profit") {
+                return historicalProfit;
+            }
+
+            return historicalCustomers;
+        }
+
+
+        /* ================= FORMAT VALUE ================= */
+
+        function formatValue(value) {
+
+            const target =
+                document.getElementById("target").value;
+
+
+            if (target === "customers") {
+
+                return Math.round(value)
+                    .toLocaleString();
+
+            }
+
+
+            return "₹" +
+                Math.round(value)
+                    .toLocaleString();
+
+        }
+
+
+        /* ================= CREATE FORECAST ================= */
+
+        function createForecast(data, months) {
+
+            const forecast = [];
+
+            const lastValue =
+                data[data.length - 1];
+
+
+            const previousValue =
+                data[data.length - 2];
+
+
+            const monthlyGrowth =
+                (lastValue - previousValue) /
+                previousValue;
+
+
+            for (let i = 1; i <= months; i++) {
+
+                let predicted =
+                    lastValue *
+                    Math.pow(
+                        1 + monthlyGrowth * 0.5,
+                        i
+                    );
+
+
+                /* Small seasonal adjustment */
+
+                predicted *=
+                    1 +
+                    Math.sin(i * 0.8) * 0.025;
+
+
+                forecast.push(
+                    Math.round(predicted)
+                );
+
+            }
+
+            return forecast;
+
+        }
+
+
+        /* ================= GENERATE FORECAST ================= */
+
+        function generateForecast() {
+
+            const loading =
+                document.getElementById("loading");
+
+            loading.style.display = "block";
+
+
+            setTimeout(() => {
+
+                const data =
+                    getHistoricalData();
+
+
+                const months =
+                    parseInt(
+                        document.getElementById(
+                            "forecastPeriod"
+                        ).value
+                    );
+
+
+                const model =
+                    document.getElementById(
+                        "model"
+                    ).value;
+
+
+                const forecast =
+                    createForecast(
+                        data,
+                        months
+                    );
+
+
+                updateKPIs(
+                    data,
+                    forecast,
+                    months
+                );
+
+
+                updateChart(
+                    data,
+                    forecast,
+                    months,
+                    model
+                );
+
+
+                updateTable(
+                    data,
+                    forecast,
+                    months
+                );
+
+
+                updateModelInfo(
+                    model
+                );
+
+
+                loading.style.display = "none";
+
+            }, 700);
+
+        }
+
+
+        /* ================= UPDATE KPI ================= */
+
+        function updateKPIs(
+            historical,
+            forecast,
+            months
+        ) {
+
+            const lastHistorical =
+                historical[
+                    historical.length - 1
+                ];
+
+
+            const lastForecast =
+                forecast[
+                    forecast.length - 1
+                ];
+
+
+            const growth =
+                (
+                    (
+                        lastForecast -
+                        lastHistorical
+                    ) /
+                    lastHistorical
+                ) * 100;
+
+
+            document.getElementById(
+                "forecastValue"
+            ).textContent =
+                formatValue(
+                    lastForecast
+                );
+
+
+            document.getElementById(
+                "growth"
+            ).textContent =
+                (growth >= 0 ? "+" : "") +
+                growth.toFixed(1) +
+                "%";
+
+
+            document.getElementById(
+                "horizon"
+            ).textContent =
+                months +
+                " Months";
+
+
+            /*
+             * Demo accuracy.
+             * Replace this with the actual
+             * model evaluation from Flask.
+             */
+
+            const accuracy =
+                90 +
+                Math.random() * 6;
+
+
+            document.getElementById(
+                "accuracy"
+            ).textContent =
+                accuracy.toFixed(1) +
+                "%";
+
+        }
+
+
+        /* ================= UPDATE CHART ================= */
+
+        function updateChart(
+            historical,
+            forecast,
+            months,
+            model
+        ) {
+
+            const allLabels = [
+                ...historicalLabels
+            ];
+
+
+            for (
+                let i = 1;
+                i <= months;
+                i++
+            ) {
+
+                allLabels.push(
+                    "F-" + i
+                );
+
+            }
+
+
+            const historicalData = [
+                ...historical
+            ];
+
+
+            while (
+                historicalData.length <
+                allLabels.length
+            ) {
+
+                historicalData.push(null);
+
+            }
+
+
+            const forecastData =
+                new Array(
+                    historical.length
+                ).fill(null);
+
+
+            forecastData[
+                historical.length - 1
+            ] =
+                historical[
+                    historical.length - 1
+                ];
+
+
+            forecast.forEach(
+                value => {
+
+                    forecastData.push(
+                        value
+                    );
+
+                }
+            );
+
+
+            if (forecastChart) {
+
+                forecastChart.destroy();
+
+            }
+
+
+            const ctx =
+                document
+                .getElementById(
+                    "forecastChart"
+                )
+                .getContext("2d");
+
+
+            const modelText =
+                model.toUpperCase();
+
+
+            forecastChart =
+                new Chart(ctx, {
+
+                    type: "line",
+
+                    data: {
+
+                        labels: allLabels,
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    "Historical",
+
+                                data:
+                                    historicalData,
+
+                                borderWidth: 3,
+
+                                pointRadius: 4,
+
+                                tension: 0.3,
+
+                                borderColor:
+                                    "#ffffff",
+
+                                backgroundColor:
+                                    "transparent"
+
+                            },
+
+                            {
+
+                                label:
+                                    "Forecast",
+
+                                data:
+                                    forecastData,
+
+                                borderWidth: 3,
+
+                                borderDash:
+                                    [8, 6],
+
+                                pointRadius: 4,
+
+                                tension: 0.3,
+
+                                borderColor:
+                                    "#f5c842",
+
+                                backgroundColor:
+                                    "rgba(245,200,66,0.08)"
+
+                            }
+
+                        ]
+
+                    },
+
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        interaction: {
+
+                            intersect: false,
+
+                            mode: "index"
+
+                        },
+
+
+                        plugins: {
+
+                            legend: {
+
+                                labels: {
+
+                                    color:
+                                        "#ffffff"
+
+                                }
+
+                            },
+
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label:
+                                        function(
+                                            context
+                                        ) {
+
+                                            if (
+                                                context
+                                                .parsed
+                                                .y ===
+                                                null
+                                            ) {
+
+                                                return "";
+
+                                            }
+
+                                            return (
+                                                " " +
+                                                formatValue(
+                                                    context
+                                                    .parsed
+                                                    .y
+                                                )
+                                            );
+
+                                        }
+
+                                }
+
+                            }
+
+                        },
+
+
+                        scales: {
+
+                            x: {
+
+                                ticks: {
+
+                                    color:
+                                        "#999"
+
+                                },
+
+                                grid: {
+
+                                    color:
+                                        "rgba(255,255,255,0.05)"
+
+                                }
+
+                            },
+
+
+                            y: {
+
+                                ticks: {
+
+                                    color:
+                                        "#999",
+
+                                    callback:
+                                        function(
+                                            value
+                                        ) {
+
+                                            if (
+                                                document
+                                                .getElementById(
+                                                    "target"
+                                                )
+                                                .value ===
+                                                "customers"
+                                            ) {
+
+                                                return value;
+
+                                            }
+
+                                            return (
+                                                "₹" +
+                                                value /
+                                                1000 +
+                                                "K"
+                                            );
+
+                                        }
+
+                                },
+
+                                grid: {
+
+                                    color:
+                                        "rgba(255,255,255,0.05)"
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+
+            document.getElementById(
+                "chartDescription"
+            ).textContent =
+                "Historical data with " +
+                modelText +
+                " forecast";
+
+        }
+
+
+        /* ================= TABLE ================= */
+
+        function updateTable(
+            historical,
+            forecast,
+            months
+        ) {
+
+            const table =
+                document.getElementById(
+                    "forecastTable"
+                );
+
+
+            table.innerHTML = "";
+
+
+            historical.forEach(
+                (value, index) => {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${historicalLabels[index]}
+                        </td>
+
+                        <td>
+                            ${formatValue(value)}
+                        </td>
+
+                        <td>
+                            —
+                        </td>
+
+                        <td>
+                            —
+                        </td>
+
+                        <td>
+                            —
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                }
+            );
+
+
+            forecast.forEach(
+                (value, index) => {
+
+                    const confidence =
+                        value * 0.08;
+
+
+                    const lower =
+                        value -
+                        confidence;
+
+
+                    const upper =
+                        value +
+                        confidence;
+
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            F-${index + 1}
+                        </td>
+
+                        <td>
+                            —
+                        </td>
+
+                        <td>
+                            ${formatValue(value)}
+                        </td>
+
+                        <td>
+                            ${formatValue(lower)}
+                        </td>
+
+                        <td>
+                            ${formatValue(upper)}
+                        </td>
+
+                    `;
+
+
+                    table.appendChild(row);
+
+                }
+            );
+
+        }
+
+
+        /* ================= MODEL INFO ================= */
+
+        function updateModelInfo(model) {
+
+            let modelName =
+                "ARIMA";
+
+            let description =
+                "The model predicts continued growth over the forecast period.";
+
+            let trend =
+                "Upward trend detected in historical data.";
+
+
+            if (model === "moving") {
+
+                modelName =
+                    "Moving Average";
+
+                description =
+                    "Forecast is generated using recent historical observations.";
+
+            }
+
+
+            if (model === "linear") {
+
+                modelName =
+                    "Linear Regression";
+
+                description =
+                    "The model estimates the future trend using a linear relationship with time.";
+
+            }
+
+
+            if (model === "exponential") {
+
+                modelName =
+                    "Exponential Smoothing";
+
+                description =
+                    "Recent observations receive higher importance when generating predictions.";
+
+            }
+
+
+            document.getElementById(
+                "modelName"
+            ).textContent =
+                modelName;
+
+
+            document.getElementById(
+                "trend"
+            ).textContent =
+                trend;
+
+
+            document.getElementById(
+                "interpretation"
+            ).textContent =
+                description;
+
+        }
+
+
+        /* ================= INITIAL LOAD ================= */
+
+        window.onload =
+            function() {
+
+                generateForecast();
+
+            };
+
+    </script>
+
+</body>
+</html>

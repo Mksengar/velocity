@@ -1,0 +1,1185 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Velocity BI - Transform your datasets into powerful insights, visualizations, dashboards and forecasts.">
+
+    <meta name="keywords"
+          content="Velocity BI, Business Intelligence, Data Analytics, Dashboard, Data Visualization, ARIMA, EDA">
+
+    <meta name="author" content="Velocity BI">
+
+    <title>Velocity BI | Intelligent Business Analytics Platform</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet" href="css/main.css">
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Project CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        :root {
+            --bg: #08090d;
+            --bg-secondary: #101218;
+            --card: #13151d;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --muted: #a7a9b4;
+            --accent: #f5c842;
+            --accent-dark: #d9ae21;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: "DM Sans", sans-serif;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            background: rgba(8, 9, 13, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 0;
+        }
+
+        .navbar-brand {
+            font-family: "Syne", sans-serif;
+            font-weight: 800;
+            font-size: 25px;
+            color: #fff !important;
+        }
+
+        .brand-dot {
+            color: var(--accent);
+        }
+
+        .nav-link {
+            color: #b9bbc5 !important;
+            font-weight: 500;
+            margin: 0 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+
+        .btn-login {
+            color: #fff;
+            border: 1px solid var(--border);
+            padding: 9px 20px;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        .btn-login:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-primary-custom {
+            background: var(--accent);
+            color: #111;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--accent-dark);
+            color: #111;
+            transform: translateY(-2px);
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 100px 0 70px;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(245, 200, 66, 0.08);
+            filter: blur(100px);
+            border-radius: 50%;
+            top: 0;
+            left: 10%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge-custom {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 50px;
+            border: 1px solid rgba(245, 200, 66, 0.25);
+            background: rgba(245, 200, 66, 0.08);
+            color: var(--accent);
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-family: "Syne", sans-serif;
+            font-size: clamp(45px, 6vw, 78px);
+            font-weight: 800;
+            line-height: 1.02;
+            letter-spacing: -3px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 35px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline-custom {
+            padding: 12px 24px;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-outline-custom:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* DASHBOARD PREVIEW */
+
+        .dashboard-preview {
+            margin-top: 60px;
+            position: relative;
+            border: 1px solid var(--border);
+            background: linear-gradient(
+                145deg,
+                rgba(255,255,255,0.06),
+                rgba(255,255,255,0.015)
+            );
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+        }
+
+        .browser-bar {
+            height: 35px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding-left: 8px;
+        }
+
+        .browser-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #555;
+        }
+
+        .dashboard-screen {
+            background: #0d0f15;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            height: 100%;
+        }
+
+        .stat-card small {
+            color: var(--muted);
+        }
+
+        .stat-card h4 {
+            margin-top: 8px;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        .chart-box {
+            height: 180px;
+            margin-top: 20px;
+            border-radius: 10px;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(245, 200, 66, 0.08),
+                    transparent
+                );
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+        }
+
+        /* SECTION */
+
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-family: "Syne", sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            max-width: 650px;
+            margin: auto;
+            line-height: 1.7;
+        }
+
+        /* FEATURES */
+
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            height: 100%;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(245, 200, 66, 0.35);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(245, 200, 66, 0.1);
+            color: var(--accent);
+            font-size: 24px;
+            margin-bottom: 22px;
+        }
+
+        .feature-card h4 {
+            font-family: "Syne", sans-serif;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        /* WORKFLOW */
+
+        .workflow {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 55px;
+            height: 55px;
+            margin: auto auto 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: #111;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .step h5 {
+            font-weight: 700;
+        }
+
+        .step p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* CTA */
+
+        .cta-box {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(245, 200, 66, 0.18),
+                    transparent 40%
+                ),
+                var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 70px 30px;
+            text-align: center;
+        }
+
+        .cta-box h2 {
+            font-family: "Syne", sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .cta-box p {
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 35px 0;
+            color: var(--muted);
+        }
+
+        .footer-brand {
+            color: white;
+            font-family: "Syne", sans-serif;
+            font-weight: 800;
+            font-size: 22px;
+        }
+
+        .footer-links a {
+            color: var(--muted);
+            margin-left: 18px;
+            transition: 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 768px) {
+
+            .hero {
+                padding-top: 70px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .section {
+                padding: 70px 0;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .cta-box h2 {
+                font-size: 32px;
+            }
+
+            .footer-links {
+                margin-top: 15px;
+            }
+
+            .footer-links a {
+                margin-left: 0;
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+
+        <a class="navbar-brand" href="index.html">
+            Velocity<span class="brand-dot">.</span>BI
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <i class="bi bi-list text-white fs-2"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <ul class="navbar-nav mx-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">
+                        Features
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#workflow">
+                        How It Works
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#analytics">
+                        Analytics
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">
+                        About
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="d-flex align-items-center">
+
+                <a href="login.html" class="btn-login">
+                    Login
+                </a>
+
+                <a href="register.html" class="btn-primary-custom">
+                    Get Started
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="about">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-8 hero-content">
+
+                <div class="badge-custom">
+                    <i class="bi bi-stars"></i>
+                    Intelligent Business Intelligence Platform
+                </div>
+
+                <h1>
+                    Turn Your Data Into
+                    <span>Decisions.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Velocity BI helps you upload, clean, analyze and
+                    visualize your datasets in one powerful platform.
+                    Discover patterns, create interactive dashboards,
+                    perform statistical analysis and generate forecasts.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="register.html"
+                       class="btn-primary-custom">
+                        Start Analyzing
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+
+                    <a href="#features"
+                       class="btn-outline-custom">
+                        Explore Features
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Dashboard Preview -->
+
+        <div class="dashboard-preview">
+
+            <div class="browser-bar">
+
+                <span class="browser-dot"></span>
+                <span class="browser-dot"></span>
+                <span class="browser-dot"></span>
+
+            </div>
+
+            <div class="dashboard-screen">
+
+                <div class="row g-3">
+
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <small>Total Records</small>
+                            <h4>24,580</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <small>Datasets</small>
+                            <h4>18</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <small>Reports</small>
+                            <h4>42</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <small>Forecast Accuracy</small>
+                            <h4>94.6%</h4>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="chart-box">
+
+                    <div class="text-center">
+
+                        <i class="bi bi-bar-chart-line fs-1"
+                           style="color: var(--accent);">
+                        </i>
+
+                        <p class="mt-2 mb-0">
+                            Interactive Analytics Dashboard
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section" id="features">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="section-title">
+                Everything You Need
+            </h2>
+
+            <p class="section-subtitle">
+                From raw datasets to meaningful business insights,
+                Velocity BI provides an integrated analytics workflow.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- Feature 1 -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                    </div>
+
+                    <h4>Dataset Upload</h4>
+
+                    <p>
+                        Upload CSV, Excel, JSON and other supported
+                        datasets and start analyzing your data instantly.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 2 -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-brush"></i>
+                    </div>
+
+                    <h4>Data Cleaning</h4>
+
+                    <p>
+                        Detect missing values, duplicates and
+                        inconsistent data before beginning your analysis.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 3 -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-bar-chart-line"></i>
+                    </div>
+
+                    <h4>EDA & Visualization</h4>
+
+                    <p>
+                        Explore your datasets with statistics,
+                        charts, graphs and interactive visualizations.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 4 -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-diagram-3"></i>
+                    </div>
+
+                    <h4>Correlation Analysis</h4>
+
+                    <p>
+                        Identify relationships between variables using
+                        correlation analysis and visual heatmaps.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 5 -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+
+                    <h4>Time-Series Forecasting</h4>
+
+                    <p>
+                        Analyze time-dependent data and generate
+                        forecasts using ARIMA-based models.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 6 -->
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+
+                    <h4>BI Dashboards</h4>
+
+                    <p>
+                        Build interactive dashboards that combine
+                        important metrics, charts and analytical insights.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= WORKFLOW ================= -->
+
+<section class="section workflow" id="workflow">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="section-title">
+                How Velocity BI Works
+            </h2>
+
+            <p class="section-subtitle">
+                A simple workflow for transforming raw data into
+                actionable insights.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-6 col-lg-3">
+
+                <div class="step">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <h5>Upload</h5>
+
+                    <p>
+                        Upload your dataset.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="step">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <h5>Clean</h5>
+
+                    <p>
+                        Prepare and clean the data.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="step">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <h5>Analyze</h5>
+
+                    <p>
+                        Discover patterns and relationships.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="step">
+
+                    <div class="step-number">
+                        04
+                    </div>
+
+                    <h5>Visualize</h5>
+
+                    <p>
+                        Build dashboards and reports.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ANALYTICS ================= -->
+
+<section class="section" id="analytics">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-6">
+
+                <div class="badge-custom">
+                    <i class="bi bi-cpu"></i>
+                    Advanced Analytics
+                </div>
+
+                <h2 class="section-title">
+                    From Data Exploration
+                    To Forecasting
+                </h2>
+
+                <p class="section-subtitle text-start mx-0">
+
+                    Velocity BI combines data processing,
+                    statistical analysis, visualization and
+                    forecasting into a single workflow.
+
+                </p>
+
+                <div class="mt-4">
+
+                    <p>
+                        <i class="bi bi-check-circle-fill me-2"
+                           style="color: var(--accent);">
+                        </i>
+                        Automated dataset statistics
+                    </p>
+
+                    <p>
+                        <i class="bi bi-check-circle-fill me-2"
+                           style="color: var(--accent);">
+                        </i>
+                        Correlation and heatmap analysis
+                    </p>
+
+                    <p>
+                        <i class="bi bi-check-circle-fill me-2"
+                           style="color: var(--accent);">
+                        </i>
+                        Interactive charts and dashboards
+                    </p>
+
+                    <p>
+                        <i class="bi bi-check-circle-fill me-2"
+                           style="color: var(--accent);">
+                        </i>
+                        ARIMA time-series forecasting
+                    </p>
+
+                    <p>
+                        <i class="bi bi-check-circle-fill me-2"
+                           style="color: var(--accent);">
+                        </i>
+                        Exportable analytical reports
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="dashboard-preview">
+
+                    <div class="dashboard-screen">
+
+                        <h5 class="mb-4">
+                            Analytics Overview
+                        </h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-6">
+
+                                <div class="stat-card">
+
+                                    <small>
+                                        Average
+                                    </small>
+
+                                    <h4>
+                                        72.8
+                                    </h4>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="stat-card">
+
+                                    <small>
+                                        Correlation
+                                    </small>
+
+                                    <h4>
+                                        0.87
+                                    </h4>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <div class="chart-box">
+
+                                    <div class="text-center">
+
+                                        <i class="bi bi-graph-up-arrow fs-1"
+                                           style="color: var(--accent);">
+                                        </i>
+
+                                        <p class="mt-2 mb-0">
+                                            Time-Series Forecast
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <h2>
+                Ready to Explore Your Data?
+            </h2>
+
+            <p>
+                Upload your dataset, discover hidden patterns,
+                create powerful visualizations and turn your data
+                into meaningful insights.
+            </p>
+
+            <a href="register.html"
+               class="btn-primary-custom">
+
+                Create Your Account
+                <i class="bi bi-arrow-right ms-2"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-6">
+
+                <div class="footer-brand">
+                    Velocity<span class="brand-dot">.</span>BI
+                </div>
+
+                <small>
+                    Intelligent Business Intelligence Platform
+                </small>
+
+            </div>
+
+            <div class="col-md-6 text-md-end">
+
+                <div class="footer-links">
+
+                    <a href="index.html">
+                        Home
+                    </a>
+
+                    <a href="#features">
+                        Features
+                    </a>
+
+                    <a href="login.html">
+                        Login
+                    </a>
+
+                    <a href="register.html">
+                        Register
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr style="border-color: var(--border);">
+
+        <div class="text-center">
+
+            <small>
+                © 2026 Velocity BI. All rights reserved.
+            </small>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<!-- Project JS -->
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+
+</body>
+</html>
+```

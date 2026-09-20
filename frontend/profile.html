@@ -1,0 +1,972 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #0a0a0f;
+            color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #25252e;
+            padding: 25px 18px;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: "Syne", sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            margin-bottom: 35px;
+            padding-left: 12px;
+        }
+
+        .logo span {
+            color: #f5c842;
+        }
+
+        .nav-title {
+            color: #777783;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 9px;
+            color: #aaaab5;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #1b1b24;
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: #f5c842;
+            color: #0a0a0f;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 250px;
+            padding: 30px 40px;
+            max-width: 1400px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-family: "Syne", sans-serif;
+            font-size: 32px;
+        }
+
+        .page-subtitle {
+            color: #858590;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            width: 42px;
+            height: 42px;
+            background: #15151d;
+            border: 1px solid #282832;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .mini-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #15151d;
+            border: 1px solid #282832;
+            padding: 7px 12px 7px 7px;
+            border-radius: 10px;
+        }
+
+        .mini-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f5c842;
+            color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        /* Profile layout */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 330px 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: #111118;
+            border: 1px solid #25252e;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        /* Profile card */
+        .profile-card {
+            text-align: center;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+
+        .avatar {
+            width: 115px;
+            height: 115px;
+            border-radius: 50%;
+            background: #f5c842;
+            color: #101010;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Syne", sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            border: 5px solid #24242d;
+        }
+
+        .camera-btn {
+            position: absolute;
+            right: 0;
+            bottom: 5px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 3px solid #111118;
+            background: #f5c842;
+            cursor: pointer;
+        }
+
+        .profile-name {
+            font-family: "Syne", sans-serif;
+            font-size: 23px;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            color: #888894;
+            font-size: 14px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 6px 13px;
+            border-radius: 20px;
+            background: #24231a;
+            color: #f5c842;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .profile-info {
+            text-align: left;
+            margin-top: 25px;
+            border-top: 1px solid #25252e;
+            padding-top: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 13px;
+        }
+
+        .info-label {
+            color: #777783;
+        }
+
+        .info-value {
+            color: #ddd;
+            text-align: right;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #111118;
+            border: 1px solid #25252e;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            color: #81818c;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-family: "Syne", sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 20px;
+        }
+
+        /* Section */
+        .section-title {
+            font-family: "Syne", sans-serif;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #aaaab4;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            background: #0b0b10;
+            border: 1px solid #292933;
+            color: #fff;
+            border-radius: 9px;
+            outline: none;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #f5c842;
+        }
+
+        input:disabled {
+            color: #777783;
+            cursor: not-allowed;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        button {
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            background: #20202a;
+            color: #ddd;
+            border: 1px solid #30303a;
+        }
+
+        .btn-primary {
+            background: #f5c842;
+            color: #101010;
+        }
+
+        .btn-primary:hover {
+            background: #ffd95d;
+        }
+
+        /* Activity */
+        .activity {
+            margin-top: 25px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #24242d;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #20202a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-text {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            color: #eee;
+        }
+
+        .activity-time {
+            color: #777783;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* Mobile */
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 25px 20px;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                align-items: flex-start;
+            }
+
+            .top-actions .notification,
+            .top-actions .mini-profile {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="nav-title">Main</div>
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="dataset-upload.html" class="nav-item">
+            <span class="nav-icon">↑</span>
+            Upload Dataset
+        </a>
+
+        <a href="dataset-preview.html" class="nav-item">
+            <span class="nav-icon">▦</span>
+            Datasets
+        </a>
+
+        <a href="eda.html" class="nav-item">
+            <span class="nav-icon">◈</span>
+            EDA
+        </a>
+
+        <a href="visualization.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            Visualization
+        </a>
+
+        <a href="dashboard-builder.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Dashboard Builder
+        </a>
+
+        <a href="reports.html" class="nav-item">
+            <span class="nav-icon">▧</span>
+            Reports
+        </a>
+
+        <div class="nav-title">Account</div>
+
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">●</span>
+            Profile
+        </a>
+
+        <a href="index.html" class="nav-item" onclick="logout()">
+            <span class="nav-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <span class="mobile-menu" onclick="toggleSidebar()">☰</span>
+
+                    <div>
+                        <h1 class="page-title">My Profile</h1>
+                        <p class="page-subtitle">
+                            Manage your Velocity BI account and personal information.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-actions">
+
+                <div class="notification">
+                    🔔
+                </div>
+
+                <div class="mini-profile">
+                    <div class="mini-avatar" id="miniAvatar">VS</div>
+                    <span id="miniName">User</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Profile Content -->
+        <div class="profile-grid">
+
+            <!-- Left Profile Card -->
+            <div class="card profile-card">
+
+                <div class="avatar-container">
+
+                    <div class="avatar" id="avatar">
+                        VS
+                    </div>
+
+                    <button class="camera-btn" onclick="changeAvatar()">
+                        📷
+                    </button>
+
+                </div>
+
+                <h2 class="profile-name" id="displayName">
+                    User
+                </h2>
+
+                <p class="profile-email" id="displayEmail">
+                    user@example.com
+                </p>
+
+                <span class="role-badge">
+                    BI Analyst
+                </span>
+
+                <div class="profile-info">
+
+                    <div class="info-row">
+                        <span class="info-label">Account Status</span>
+                        <span class="info-value">Active</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Member Since</span>
+                        <span class="info-value">September 2026</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Plan</span>
+                        <span class="info-value">Free</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Last Login</span>
+                        <span class="info-value">Today</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Right Content -->
+            <div>
+
+                <!-- Statistics -->
+                <div class="stats">
+
+                    <div class="stat-card">
+                        <span class="stat-icon">📊</span>
+                        <div class="stat-label">Datasets</div>
+                        <div class="stat-number">12</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">📈</span>
+                        <div class="stat-label">Reports</div>
+                        <div class="stat-number">8</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">⚡</span>
+                        <div class="stat-label">Analyses</div>
+                        <div class="stat-number">24</div>
+                    </div>
+
+                </div>
+
+
+                <!-- Edit Profile -->
+                <div class="card">
+
+                    <h2 class="section-title">
+                        Personal Information
+                    </h2>
+
+                    <form id="profileForm">
+
+                        <div class="form-grid">
+
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    value="Velocity"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    value="User"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value="user@example.com"
+                                    disabled
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select id="role">
+                                    <option>BI Analyst</option>
+                                    <option>Data Analyst</option>
+                                    <option>Data Scientist</option>
+                                    <option>Developer</option>
+                                    <option>Student</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full">
+                                <label for="company">Organization / College</label>
+                                <input
+                                    type="text"
+                                    id="company"
+                                    placeholder="Enter your organization or college"
+                                >
+                            </div>
+
+                            <div class="form-group full">
+                                <label for="bio">About Me</label>
+                                <input
+                                    type="text"
+                                    id="bio"
+                                    placeholder="Write something about yourself..."
+                                >
+                            </div>
+
+                        </div>
+
+                        <div class="button-row">
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="resetForm()"
+                            >
+                                Reset
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Recent Activity -->
+                <div class="card activity">
+
+                    <h2 class="section-title">
+                        Recent Activity
+                    </h2>
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            📤
+                        </div>
+
+                        <div class="activity-text">
+                            <div class="activity-title">
+                                Uploaded Sales Dataset
+                            </div>
+                            <div class="activity-time">
+                                Today, 10:30 AM
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            📊
+                        </div>
+
+                        <div class="activity-text">
+                            <div class="activity-title">
+                                Created Sales Dashboard
+                            </div>
+                            <div class="activity-time">
+                                Yesterday, 4:15 PM
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            📈
+                        </div>
+
+                        <div class="activity-text">
+                            <div class="activity-title">
+                                Generated EDA Report
+                            </div>
+                            <div class="activity-time">
+                                September 17, 2026
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+        }
+
+
+        // Save profile
+        document.getElementById("profileForm").addEventListener("submit", function(e) {
+
+            e.preventDefault();
+
+            const firstName = document.getElementById("firstName").value.trim();
+            const lastName = document.getElementById("lastName").value.trim();
+            const role = document.getElementById("role").value;
+
+            if (!firstName || !lastName) {
+                alert("Please enter your first and last name.");
+                return;
+            }
+
+            const fullName = firstName + " " + lastName;
+
+            document.getElementById("displayName").textContent = fullName;
+            document.getElementById("miniName").textContent = fullName;
+
+            const initials =
+                firstName.charAt(0).toUpperCase() +
+                lastName.charAt(0).toUpperCase();
+
+            document.getElementById("avatar").textContent = initials;
+            document.getElementById("miniAvatar").textContent = initials;
+
+            document.querySelector(".role-badge").textContent = role;
+
+            // Save locally
+            localStorage.setItem("velocityProfile", JSON.stringify({
+                firstName: firstName,
+                lastName: lastName,
+                role: role,
+                company: document.getElementById("company").value,
+                bio: document.getElementById("bio").value
+            }));
+
+            alert("Profile updated successfully!");
+
+        });
+
+
+        // Load saved profile
+        window.addEventListener("DOMContentLoaded", function() {
+
+            const savedProfile =
+                localStorage.getItem("velocityProfile");
+
+            if (!savedProfile) return;
+
+            const profile = JSON.parse(savedProfile);
+
+            document.getElementById("firstName").value =
+                profile.firstName || "";
+
+            document.getElementById("lastName").value =
+                profile.lastName || "";
+
+            document.getElementById("role").value =
+                profile.role || "BI Analyst";
+
+            document.getElementById("company").value =
+                profile.company || "";
+
+            document.getElementById("bio").value =
+                profile.bio || "";
+
+            updateProfileDisplay(profile);
+        });
+
+
+        function updateProfileDisplay(profile) {
+
+            const fullName =
+                profile.firstName + " " + profile.lastName;
+
+            const initials =
+                profile.firstName.charAt(0).toUpperCase() +
+                profile.lastName.charAt(0).toUpperCase();
+
+            document.getElementById("displayName").textContent =
+                fullName;
+
+            document.getElementById("miniName").textContent =
+                fullName;
+
+            document.getElementById("avatar").textContent =
+                initials;
+
+            document.getElementById("miniAvatar").textContent =
+                initials;
+
+            document.querySelector(".role-badge").textContent =
+                profile.role;
+        }
+
+
+        // Reset form
+        function resetForm() {
+
+            document.getElementById("firstName").value = "Velocity";
+            document.getElementById("lastName").value = "User";
+            document.getElementById("role").value = "BI Analyst";
+            document.getElementById("company").value = "";
+            document.getElementById("bio").value = "";
+
+        }
+
+
+        // Change avatar
+        function changeAvatar() {
+
+            alert(
+                "Avatar upload can be connected to your Flask backend later."
+            );
+
+        }
+
+
+        // Logout
+        function logout() {
+
+            localStorage.removeItem("velocityProfile");
+
+            // If JWT authentication is used:
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("token");
+
+        }
+
+    </script>
+
+</body>
+</html>
+```

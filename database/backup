@@ -1,0 +1,320 @@
+```python
+"""
+============================================================
+Velocity BI - Database Backup Utility
+File: database/backup.py
+Database: MySQL
+============================================================
+
+This script creates a timestamped SQL backup of the
+Velocity BI MySQL database.
+
+Requirements:
+    - MySQL installed
+    - mysqldump available in PATH
+    - Python 3.9+
+
+Environment variables:
+    DB_HOST
+    DB_PORT
+    DB_USER
+    DB_PASSWORD
+    DB_NAME
+
+Example:
+    python database/backup.py
+============================================================
+"""
+
+import os
+import sys
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+
+# ============================================================
+# Configuration
+# ============================================================
+
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "3306")
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_NAME = os.getenv("DB_NAME", "velocity_bi")
+
+BACKUP_DIR = Path(
+    os.getenv(
+        "BACKUP_DIR",
+        Path(__file__).resolve().parent / "backups"
+    )
+)
+
+
+# ============================================================
+# Create Backup Directory
+# ============================================================
+
+def create_backup_directory():
+    """Create backup directory if it does not exist."""
+
+    try:
+        BACKUP_DIR.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
+    except OSError as error:
+        print(
+            f"ERROR: Could not create backup directory: {error}"
+        )
+        sys.exit(1)
+
+
+# ============================================================
+# Generate Backup Filename
+# ============================================================
+
+def generate_backup_filename():
+    """Generate a timestamp-based backup filename."""
+
+    timestamp = datetime.now().strftime(
+        "%Y%m%d_%H%M%S"
+    )
+
+    return BACKUP_DIR / (
+        f"{DB_NAME}_{timestamp}.sql"
+    )
+
+
+# ============================================================
+# Check mysqldump
+# ============================================================
+
+def check_mysqldump():
+    """Check whether mysqldump is installed."""
+
+    try:
+        subprocess.run(
+            ["mysqldump", "--version"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+            text=True
+        )
+
+        return True
+
+    except (
+        FileNotFoundError,
+        subprocess.CalledProcessError
+    ):
+        return False
+
+
+# ============================================================
+# Create Database Backup
+# ============================================================
+
+def create_backup():
+    """Create a MySQL database backup."""
+
+    create_backup_directory()
+
+    if not check_mysqldump():
+        print(
+            "ERROR: mysqldump was not found."
+        )
+        print(
+            "Make sure MySQL is installed and "
+            "mysqldump is available in PATH."
+        )
+        return False
+
+    backup_file = generate_backup_filename()
+
+    command = [
+        "mysqldump",
+
+        "--host",
+        DB_HOST,
+
+        "--port",
+        DB_PORT,
+
+        "--user",
+        DB_USER,
+
+        "--single-transaction",
+
+        "--routines",
+
+        "--triggers",
+
+        "--events",
+
+        "--add-drop-table",
+
+        DB_NAME
+    ]
+
+    # --------------------------------------------------------
+    # Password Handling
+    # --------------------------------------------------------
+    #
+    # MYSQL_PWD avoids exposing the password directly in
+    # the command-line arguments.
+    # --------------------------------------------------------
+
+    environment = os.environ.copy()
+
+    if DB_PASSWORD:
+        environment["MYSQL_PWD"] = DB_PASSWORD
+
+    try:
+
+        with open(
+            backup_file,
+            "w",
+            encoding="utf-8"
+        ) as output_file:
+
+            result = subprocess.run(
+                command,
+                stdout=output_file,
+                stderr=subprocess.PIPE,
+                text=True,
+                env=environment
+            )
+
+        if result.returncode != 0:
+
+            # Remove incomplete backup
+            if backup_file.exists():
+                backup_file.unlink()
+
+            print(
+                "ERROR: Database backup failed."
+            )
+
+            if result.stderr:
+                print(result.stderr)
+
+            return False
+
+        print(
+            "================================================"
+        )
+
+        print(
+            "Velocity BI Database Backup Successful"
+        )
+
+        print(
+            "================================================"
+        )
+
+        print(
+            f"Database : {DB_NAME}"
+        )
+
+        print(
+            f"Backup   : {backup_file}"
+        )
+
+        print(
+            f"Size     : {backup_file.stat().st_size:,} bytes"
+        )
+
+        return True
+
+    except PermissionError:
+        print(
+            "ERROR: Permission denied while creating backup."
+        )
+        return False
+
+    except OSError as error:
+        print(
+            f"ERROR: Backup process failed: {error}"
+        )
+        return False
+
+
+# ============================================================
+# Delete Old Backups
+# ============================================================
+
+def delete_old_backups(keep=10):
+    """
+    Keep only the newest `keep` backup files.
+
+    Example:
+        delete_old_backups(10)
+
+    keeps the latest 10 SQL backups.
+    """
+
+    if not BACKUP_DIR.exists():
+        return
+
+    backup_files = sorted(
+        BACKUP_DIR.glob("*.sql"),
+        key=lambda file: file.stat().st_mtime,
+        reverse=True
+    )
+
+    old_files = backup_files[keep:]
+
+    for backup_file in old_files:
+
+        try:
+            backup_file.unlink()
+
+            print(
+                f"Deleted old backup: {backup_file.name}"
+            )
+
+        except OSError as error:
+
+            print(
+                f"WARNING: Could not delete "
+                f"{backup_file.name}: {error}"
+            )
+
+
+# ============================================================
+# Main
+# ============================================================
+
+def main():
+    """Main backup function."""
+
+    print()
+    print(
+        "Starting Velocity BI database backup..."
+    )
+    print()
+
+    success = create_backup()
+
+    if not success:
+        sys.exit(1)
+
+    # Keep latest 10 backups
+    delete_old_backups(keep=10)
+
+    print()
+    print(
+        "Backup process completed."
+    )
+    print()
+
+
+# ============================================================
+# Run Script
+# ============================================================
+
+if __name__ == "__main__":
+    main()
+```

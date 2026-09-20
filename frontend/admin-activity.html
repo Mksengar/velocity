@@ -1,0 +1,1480 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Activity - Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #272733;
+            padding: 25px 15px;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #f5c842;
+            padding: 0 15px 30px;
+        }
+
+        .logo span {
+            color: #ffffff;
+        }
+
+        .menu-title {
+            color: #777784;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin: 20px 15px 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #aaaab5;
+            padding: 13px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1c1c25;
+            color: #f5c842;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #888894;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #f5c842;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* ================= STATISTICS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #111118;
+            border: 1px solid #272733;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-card p {
+            color: #888894;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 28px;
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 25px;
+            opacity: 0.8;
+        }
+
+        /* ================= FILTER BAR ================= */
+
+        .filter-box {
+            background: #111118;
+            border: 1px solid #272733;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #191921;
+            color: #ffffff;
+            border: 1px solid #30303b;
+            border-radius: 8px;
+            padding: 12px 15px 12px 40px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #f5c842;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 11px;
+            color: #777784;
+        }
+
+        select {
+            background: #191921;
+            color: #ffffff;
+            border: 1px solid #30303b;
+            border-radius: 8px;
+            padding: 12px 15px;
+            outline: none;
+            min-width: 160px;
+        }
+
+        select:focus {
+            border-color: #f5c842;
+        }
+
+        .clear-btn {
+            background: transparent;
+            color: #aaaab5;
+            border: 1px solid #30303b;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+        }
+
+        .clear-btn:hover {
+            color: #f5c842;
+            border-color: #f5c842;
+        }
+
+        /* ================= ACTIVITY TABLE ================= */
+
+        .activity-container {
+            background: #111118;
+            border: 1px solid #272733;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        .activity-header {
+            padding: 20px;
+            border-bottom: 1px solid #272733;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-header h2 {
+            font-size: 18px;
+        }
+
+        .activity-header span {
+            color: #777784;
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            padding: 17px 18px;
+            text-align: left;
+            border-bottom: 1px solid #272733;
+        }
+
+        th {
+            color: #888894;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #17171f;
+        }
+
+        /* ================= USER ================= */
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #252530;
+            color: #f5c842;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            color: #777784;
+            font-size: 11px;
+        }
+
+        /* ================= ACTIVITY TYPE ================= */
+
+        .activity-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1d1d26;
+        }
+
+        .login {
+            color: #52d47a;
+        }
+
+        .logout {
+            color: #ff7070;
+        }
+
+        .upload {
+            color: #70a7ff;
+        }
+
+        .delete {
+            color: #ff7070;
+        }
+
+        .report {
+            color: #c58cff;
+        }
+
+        .dashboard {
+            color: #f5c842;
+        }
+
+        .activity-name {
+            font-weight: bold;
+        }
+
+        .activity-description {
+            color: #777784;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: rgba(50, 205, 100, 0.12);
+            color: #52d47a;
+        }
+
+        .failed {
+            background: rgba(255, 90, 90, 0.12);
+            color: #ff7070;
+        }
+
+        /* ================= TIME ================= */
+
+        .time {
+            color: #aaaab5;
+        }
+
+        .ip {
+            color: #777784;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        /* ================= PAGINATION ================= */
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            color: #888894;
+            font-size: 13px;
+        }
+
+        .page-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            background: #191921;
+            border: 1px solid #30303b;
+            color: #aaaab5;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .page-btn:hover {
+            border-color: #f5c842;
+            color: #f5c842;
+        }
+
+        .page-btn.active {
+            background: #f5c842;
+            color: #111111;
+            border-color: #f5c842;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .logo {
+                font-size: 18px;
+                padding: 0 8px 25px;
+            }
+
+            .logo span,
+            .nav-link span,
+            .menu-title {
+                display: none;
+            }
+
+            .nav-link {
+                justify-content: center;
+                padding: 13px 8px;
+            }
+
+            .main {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .admin-profile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 15px;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-box,
+            select,
+            .clear-btn {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="menu-title">
+            Admin Panel
+        </div>
+
+        <a href="admin-dashboard.html" class="nav-link">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="admin-users.html" class="nav-link">
+            <span class="nav-icon">👥</span>
+            <span>Users</span>
+        </a>
+
+        <a href="admin-activity.html" class="nav-link active">
+            <span class="nav-icon">🕒</span>
+            <span>Activity</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <span class="nav-icon">📁</span>
+            <span>Datasets</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <span class="nav-icon">📈</span>
+            <span>Reports</span>
+        </a>
+
+        <a href="settings.html" class="nav-link">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+
+        <div class="menu-title">
+            Account
+        </div>
+
+        <a href="index.html" class="nav-link">
+            <span class="nav-icon">🚪</span>
+            <span>Logout</span>
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <div class="page-title">
+
+                <h1>Activity Logs</h1>
+
+                <p>
+                    Monitor user activities and system events.
+                </p>
+
+            </div>
+
+            <div class="admin-profile">
+
+                <div>
+                    <strong>Admin</strong>
+
+                    <p style="color:#777784;font-size:12px;">
+                        Administrator
+                    </p>
+                </div>
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <span class="stat-icon">⚡</span>
+
+                <p>Total Activities</p>
+
+                <h2>8,426</h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <span class="stat-icon">🔐</span>
+
+                <p>Login Activities</p>
+
+                <h2>3,214</h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <span class="stat-icon">📤</span>
+
+                <p>Dataset Uploads</p>
+
+                <h2>1,846</h2>
+
+            </div>
+
+            <div class="stat-card">
+
+                <span class="stat-icon">📊</span>
+
+                <p>Reports Created</p>
+
+                <h2>1,326</h2>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= FILTERS ================= -->
+
+        <section class="filter-box">
+
+            <div class="filters">
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search activity..."
+                        onkeyup="filterActivities()"
+                    >
+
+                </div>
+
+
+                <select
+                    id="activityFilter"
+                    onchange="filterActivities()"
+                >
+
+                    <option value="all">
+                        All Activities
+                    </option>
+
+                    <option value="login">
+                        Login
+                    </option>
+
+                    <option value="logout">
+                        Logout
+                    </option>
+
+                    <option value="upload">
+                        Dataset Upload
+                    </option>
+
+                    <option value="report">
+                        Report
+                    </option>
+
+                    <option value="dashboard">
+                        Dashboard
+                    </option>
+
+                    <option value="delete">
+                        Delete
+                    </option>
+
+                </select>
+
+
+                <select
+                    id="statusFilter"
+                    onchange="filterActivities()"
+                >
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="success">
+                        Successful
+                    </option>
+
+                    <option value="failed">
+                        Failed
+                    </option>
+
+                </select>
+
+
+                <button
+                    class="clear-btn"
+                    onclick="clearFilters()"
+                >
+                    Clear Filters
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ACTIVITY TABLE ================= -->
+
+        <section class="activity-container">
+
+            <div class="activity-header">
+
+                <h2>Recent Activity</h2>
+
+                <span>
+                    Last updated: Just now
+                </span>
+
+            </div>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>User</th>
+
+                        <th>Activity</th>
+
+                        <th>Status</th>
+
+                        <th>IP Address</th>
+
+                        <th>Date & Time</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="activityTable">
+
+
+                    <!-- Activity 1 -->
+
+                    <tr
+                        data-activity="login"
+                        data-status="success"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    RS
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Rahul Sharma
+                                    </div>
+
+                                    <div class="user-email">
+                                        rahul@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon login">
+                                    🔐
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        User Login
+                                    </div>
+
+                                    <div class="activity-description">
+                                        Logged into Velocity BI
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status success">
+                                Successful
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.24
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 08:18 PM
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Activity 2 -->
+
+                    <tr
+                        data-activity="upload"
+                        data-status="success"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    PP
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Priya Patel
+                                    </div>
+
+                                    <div class="user-email">
+                                        priya@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon upload">
+                                    📤
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        Dataset Uploaded
+                                    </div>
+
+                                    <div class="activity-description">
+                                        sales_data.csv uploaded
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status success">
+                                Successful
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.31
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 08:05 PM
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Activity 3 -->
+
+                    <tr
+                        data-activity="report"
+                        data-status="success"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    RV
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Rohit Verma
+                                    </div>
+
+                                    <div class="user-email">
+                                        rohit@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon report">
+                                    📄
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        Report Created
+                                    </div>
+
+                                    <div class="activity-description">
+                                        Sales performance report
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status success">
+                                Successful
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.42
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 07:54 PM
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Activity 4 -->
+
+                    <tr
+                        data-activity="login"
+                        data-status="failed"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    AK
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Amit Kumar
+                                    </div>
+
+                                    <div class="user-email">
+                                        amit@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon login">
+                                    🔐
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        Login Attempt
+                                    </div>
+
+                                    <div class="activity-description">
+                                        Incorrect password
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status failed">
+                                Failed
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.58
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 07:42 PM
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Activity 5 -->
+
+                    <tr
+                        data-activity="dashboard"
+                        data-status="success"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    NS
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Neha Singh
+                                    </div>
+
+                                    <div class="user-email">
+                                        neha@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon dashboard">
+                                    📊
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        Dashboard Created
+                                    </div>
+
+                                    <div class="activity-description">
+                                        Created marketing dashboard
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status success">
+                                Successful
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.64
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 07:31 PM
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Activity 6 -->
+
+                    <tr
+                        data-activity="delete"
+                        data-status="success"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    RS
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Rahul Sharma
+                                    </div>
+
+                                    <div class="user-email">
+                                        rahul@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon delete">
+                                    🗑️
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        Dataset Deleted
+                                    </div>
+
+                                    <div class="activity-description">
+                                        Old_customer_data.csv
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status success">
+                                Successful
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.24
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 07:15 PM
+                        </td>
+
+                    </tr>
+
+
+                    <!-- Activity 7 -->
+
+                    <tr
+                        data-activity="logout"
+                        data-status="success"
+                    >
+
+                        <td>
+
+                            <div class="user-info">
+
+                                <div class="user-avatar">
+                                    AM
+                                </div>
+
+                                <div>
+
+                                    <div class="user-name">
+                                        Ankit Mehta
+                                    </div>
+
+                                    <div class="user-email">
+                                        ankit@example.com
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="activity-type">
+
+                                <div class="activity-icon logout">
+                                    🚪
+                                </div>
+
+                                <div>
+
+                                    <div class="activity-name">
+                                        User Logout
+                                    </div>
+
+                                    <div class="activity-description">
+                                        Logged out from account
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            <span class="status success">
+                                Successful
+                            </span>
+                        </td>
+
+
+                        <td class="ip">
+                            192.168.1.72
+                        </td>
+
+
+                        <td class="time">
+                            19 Sep 2026, 06:58 PM
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+
+            <!-- Pagination -->
+
+            <div class="pagination">
+
+                <span>
+                    Showing 1–7 of 8,426 activities
+                </span>
+
+                <div class="page-buttons">
+
+                    <button class="page-btn">
+                        ‹
+                    </button>
+
+                    <button class="page-btn active">
+                        1
+                    </button>
+
+                    <button class="page-btn">
+                        2
+                    </button>
+
+                    <button class="page-btn">
+                        3
+                    </button>
+
+                    <button class="page-btn">
+                        4
+                    </button>
+
+                    <button class="page-btn">
+                        5
+                    </button>
+
+                    <button class="page-btn">
+                        ›
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        function filterActivities() {
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase();
+
+            const activity =
+                document
+                    .getElementById("activityFilter")
+                    .value;
+
+            const status =
+                document
+                    .getElementById("statusFilter")
+                    .value;
+
+            const rows =
+                document.querySelectorAll(
+                    "#activityTable tr"
+                );
+
+            rows.forEach(row => {
+
+                const text =
+                    row.innerText.toLowerCase();
+
+                const rowActivity =
+                    row.dataset.activity;
+
+                const rowStatus =
+                    row.dataset.status;
+
+                const searchMatch =
+                    text.includes(search);
+
+                const activityMatch =
+                    activity === "all" ||
+                    rowActivity === activity;
+
+                const statusMatch =
+                    status === "all" ||
+                    rowStatus === status;
+
+                if (
+                    searchMatch &&
+                    activityMatch &&
+                    statusMatch
+                ) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+        }
+
+
+        function clearFilters() {
+
+            document.getElementById(
+                "searchInput"
+            ).value = "";
+
+            document.getElementById(
+                "activityFilter"
+            ).value = "all";
+
+            document.getElementById(
+                "statusFilter"
+            ).value = "all";
+
+            filterActivities();
+
+        }
+
+
+        /* Pagination demo */
+
+        const pageButtons =
+            document.querySelectorAll(".page-btn");
+
+        pageButtons.forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        this.textContent === "‹" ||
+                        this.textContent === "›"
+                    ) {
+                        return;
+                    }
+
+                    pageButtons.forEach(btn => {
+                        btn.classList.remove("active");
+                    });
+
+                    this.classList.add("active");
+
+                }
+            );
+
+        });
+
+    </script>
+
+</body>
+</html>
+```

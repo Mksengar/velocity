@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports | Velocity BI</title>
+
+    <!-- Chart.js -->
+     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #292933;
+            padding: 25px 15px;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #f5c842;
+            padding: 0 15px 30px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 13px 15px;
+            margin: 5px 0;
+            color: #aaa;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1d1d27;
+            color: #f5c842;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        /* ================= TOPBAR ================= */
+
+        .topbar {
+            min-height: 75px;
+            background: #111118;
+            border-bottom: 1px solid #292933;
+            padding: 15px 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 26px;
+        }
+
+        .page-title p {
+            color: #888;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 7px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #f5c842;
+            color: #111;
+        }
+
+        .btn-secondary {
+            background: #20202a;
+            color: #fff;
+            border: 1px solid #33333e;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .content {
+            padding: 30px;
+        }
+
+        /* ================= REPORT SETTINGS ================= */
+
+        .settings {
+            background: #111118;
+            border: 1px solid #292933;
+            border-radius: 12px;
+            padding: 22px;
+
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+
+            margin-bottom: 25px;
+        }
+
+        .control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control label {
+            color: #999;
+            font-size: 13px;
+        }
+
+        select,
+        input {
+            background: #191922;
+            color: #fff;
+            border: 1px solid #33333e;
+            border-radius: 7px;
+            padding: 11px 14px;
+            min-width: 190px;
+            outline: none;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #f5c842;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: none;
+            color: #f5c842;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* ================= REPORT ================= */
+
+        .report {
+            background: #111118;
+            border: 1px solid #292933;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+
+            padding-bottom: 25px;
+            border-bottom: 1px solid #292933;
+        }
+
+        .report-header h2 {
+            font-size: 25px;
+        }
+
+        .report-header p {
+            color: #888;
+            margin-top: 7px;
+            font-size: 13px;
+        }
+
+        .report-date {
+            color: #888;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        /* ================= SUMMARY ================= */
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+
+            margin: 25px 0;
+        }
+
+        .summary-card {
+            background: #191922;
+            border: 1px solid #292933;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .summary-card .label {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .green {
+            color: #4ade80;
+        }
+
+        .red {
+            color: #ff6b6b;
+        }
+
+        .yellow {
+            color: #f5c842;
+        }
+
+        /* ================= REPORT SECTION ================= */
+
+        .report-section {
+            margin-top: 30px;
+        }
+
+        .report-section h3 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .report-section > p {
+            color: #999;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        /* ================= CHART GRID ================= */
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: #191922;
+            border: 1px solid #292933;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .chart-card h4 {
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* ================= INSIGHTS ================= */
+
+        .insights {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .insight {
+            background: #191922;
+            border-left: 3px solid #f5c842;
+            padding: 17px;
+            border-radius: 7px;
+        }
+
+        .insight h4 {
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .insight p {
+            color: #999;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #292933;
+            text-align: left;
+        }
+
+        th {
+            color: #f5c842;
+            font-size: 13px;
+        }
+
+        td {
+            color: #bbb;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #181820;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .report-footer {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid #292933;
+
+            display: flex;
+            justify-content: space-between;
+
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 1000px) {
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chart-grid,
+            .insights {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .settings {
+                flex-direction: column;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .report {
+                padding: 20px;
+            }
+
+            .report-header {
+                flex-direction: column;
+            }
+
+            .report-date {
+                text-align: left;
+            }
+
+        }
+
+        /* ================= PRINT ================= */
+
+        @media print {
+
+            body {
+                background: #fff;
+                color: #000;
+            }
+
+            .sidebar,
+            .topbar,
+            .settings,
+            .no-print {
+                display: none !important;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .content {
+                padding: 0;
+            }
+
+            .report {
+                border: none;
+                background: #fff;
+                color: #000;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Velocity BI
+        </div>
+
+        <a href="dashboard.html" class="nav-link">
+            📊 Dashboard
+        </a>
+
+        <a href="dataset-upload.html" class="nav-link">
+            📁 Upload Dataset
+        </a>
+
+        <a href="dataset-preview.html" class="nav-link">
+            👁 Dataset Preview
+        </a>
+
+        <a href="data-cleaning.html" class="nav-link">
+            🧹 Data Cleaning
+        </a>
+
+        <a href="eda.html" class="nav-link">
+            🔍 EDA
+        </a>
+
+        <a href="visualization.html" class="nav-link">
+            📈 Visualization
+        </a>
+
+        <a href="correlation-analysis.html" class="nav-link">
+            🔗 Correlation
+        </a>
+
+        <a href="time-series.html" class="nav-link">
+            ⏱ Time Series
+        </a>
+
+        <a href="forecasting.html" class="nav-link">
+            🔮 Forecasting
+        </a>
+
+        <a href="dashboard-builder.html" class="nav-link">
+            🧩 Dashboard Builder
+        </a>
+
+        <a href="reports.html" class="nav-link active">
+            📄 Reports
+        </a>
+
+        <a href="index.html" class="nav-link">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- ================= TOPBAR ================= -->
+
+        <header class="topbar">
+
+            <div class="page-title">
+
+                <h1>
+                    Reports
+                </h1>
+
+                <p>
+                    Generate and export business intelligence reports
+                </p>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="printReport()">
+
+                    🖨 Print
+
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="downloadCSV()">
+
+                    📊 CSV
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="generateReport()">
+
+                    Generate Report
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <div class="content">
+
+
+            <!-- ================= SETTINGS ================= -->
+
+            <section class="settings no-print">
+
+                <div class="control">
+
+                    <label>
+                        Dataset
+                    </label>
+
+                    <select id="dataset">
+
+                        <option>
+                            Sales Dataset
+                        </option>
+
+                        <option>
+                            Customer Dataset
+                        </option>
+
+                        <option>
+                            Revenue Dataset
+                        </option>
+
+                        <option>
+                            Marketing Dataset
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="control">
+
+                    <label>
+                        Report Type
+                    </label>
+
+                    <select id="reportType">
+
+                        <option value="executive">
+                            Executive Summary
+                        </option>
+
+                        <option value="analytics">
+                            Data Analytics Report
+                        </option>
+
+                        <option value="forecast">
+                            Forecast Report
+                        </option>
+
+                        <option value="complete">
+                            Complete BI Report
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="control">
+
+                    <label>
+                        Start Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="startDate"
+                        value="2026-01-01">
+
+                </div>
+
+
+                <div class="control">
+
+                    <label>
+                        End Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="endDate"
+                        value="2026-12-31">
+
+                </div>
+
+
+                <div
+                    class="status"
+                    id="status">
+
+                    Generating report...
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= REPORT ================= -->
+
+            <section
+                class="report"
+                id="reportContent">
+
+
+                <!-- REPORT HEADER -->
+
+                <div class="report-header">
+
+                    <div>
+
+                        <h2 id="reportTitle">
+                            Velocity BI — Executive Report
+                        </h2>
+
+                        <p id="reportSubtitle">
+                            Business Intelligence Analysis
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        class="report-date"
+                        id="reportDate">
+
+                        Generated:
+                        September 19, 2026
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= SUMMARY ================= -->
+
+                <div class="summary">
+
+                    <div class="summary-card">
+
+                        <div class="label">
+                            Total Sales
+                        </div>
+
+                        <div
+                            class="value"
+                            id="totalSales">
+
+                            ₹8.42L
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-card">
+
+                        <div class="label">
+                            Average Sales
+                        </div>
+
+                        <div
+                            class="value"
+                            id="averageSales">
+
+                            ₹70.2K
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-card">
+
+                        <div class="label">
+                            Growth
+                        </div>
+
+                        <div
+                            class="value green"
+                            id="growth">
+
+                            +18.6%
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-card">
+
+                        <div class="label">
+                            Records
+                        </div>
+
+                        <div
+                            class="value yellow"
+                            id="records">
+
+                            12
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= EXECUTIVE SUMMARY ================= -->
+
+                <section class="report-section">
+
+                    <h3>
+                        Executive Summary
+                    </h3>
+
+                    <p id="summaryText">
+
+                        The analysis indicates an overall positive
+                        trend in sales performance during the selected
+                        period. Sales increased throughout the year,
+                        with the strongest performance recorded in
+                        October and December.
+
+                    </p>
+
+                </section>
+
+
+                <!-- ================= CHARTS ================= -->
+
+                <section class="report-section">
+
+                    <h3>
+                        Data Visualization
+                    </h3>
+
+                    <p>
+                        Key trends and distributions identified
+                        from the selected dataset.
+                    </p>
+
+
+                    <div class="chart-grid">
+
+
+                        <div class="chart-card">
+
+                            <h4>
+                                Monthly Sales Trend
+                            </h4>
+
+                            <div class="chart-container">
+
+                                <canvas
+                                    id="salesChart">
+                                </canvas>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="chart-card">
+
+                            <h4>
+                                Product Distribution
+                            </h4>
+
+                            <div class="chart-container">
+
+                                <canvas
+                                    id="distributionChart">
+                                </canvas>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= INSIGHTS ================= -->
+
+                <section class="report-section">
+
+                    <h3>
+                        Key Insights
+                    </h3>
+
+                    <p>
+                        Automatically generated insights from
+                        the analysis.
+                    </p>
+
+
+                    <div class="insights">
+
+
+                        <div class="insight">
+
+                            <h4>
+                                📈 Positive Growth
+                            </h4>
+
+                            <p>
+                                The dataset shows an overall
+                                upward trend with approximately
+                                18.6% growth.
+                            </p>
+
+                        </div>
+
+
+                        <div class="insight">
+
+                            <h4>
+                                🔝 Peak Performance
+                            </h4>
+
+                            <p>
+                                December recorded one of the
+                                highest values during the
+                                analyzed period.
+                            </p>
+
+                        </div>
+
+
+                        <div class="insight">
+
+                            <h4>
+                                📊 Monthly Variation
+                            </h4>
+
+                            <p>
+                                Monthly values fluctuate while
+                                maintaining an overall upward
+                                direction.
+                            </p>
+
+                        </div>
+
+
+                        <div class="insight">
+
+                            <h4>
+                                🔮 Forecast Opportunity
+                            </h4>
+
+                            <p>
+                                Historical patterns can be used
+                                to build forecasting models for
+                                future business planning.
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= FORECAST ================= -->
+
+                <section class="report-section">
+
+                    <h3>
+                        Forecast Summary
+                    </h3>
+
+                    <p>
+                        Projected values based on historical
+                        observations.
+                    </p>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Period
+                                    </th>
+
+                                    <th>
+                                        Historical
+                                    </th>
+
+                                    <th>
+                                        Forecast
+                                    </th>
+
+                                    <th>
+                                        Lower Bound
+                                    </th>
+
+                                    <th>
+                                        Upper Bound
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="forecastTable">
+
+                                <tr>
+                                    <td>Jan</td>
+                                    <td>₹42,000</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Feb</td>
+                                    <td>₹48,000</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Jan 2027</td>
+                                    <td>—</td>
+                                    <td>₹94,000</td>
+                                    <td>₹86,480</td>
+                                    <td>₹101,520</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Feb 2027</td>
+                                    <td>—</td>
+                                    <td>₹98,000</td>
+                                    <td>₹90,160</td>
+                                    <td>₹105,840</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Mar 2027</td>
+                                    <td>—</td>
+                                    <td>₹102,000</td>
+                                    <td>₹93,840</td>
+                                    <td>₹110,160</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= DATA QUALITY ================= -->
+
+                <section class="report-section">
+
+                    <h3>
+                        Data Quality
+                    </h3>
+
+                    <p>
+                        Summary of dataset quality and preprocessing.
+                    </p>
+
+
+                    <div class="summary">
+
+                        <div class="summary-card">
+
+                            <div class="label">
+                                Total Records
+                            </div>
+
+                            <div class="value">
+                                12
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-card">
+
+                            <div class="label">
+                                Missing Values
+                            </div>
+
+                            <div class="value green">
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-card">
+
+                            <div class="label">
+                                Duplicate Rows
+                            </div>
+
+                            <div class="value green">
+                                0
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-card">
+
+                            <div class="label">
+                                Data Quality
+                            </div>
+
+                            <div class="value yellow">
+                                100%
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= FOOTER ================= -->
+
+                <footer class="report-footer">
+
+                    <span>
+                        Generated by Velocity BI
+                    </span>
+
+                    <span>
+                        Business Intelligence & Analytics Platform
+                    </span>
+
+                </footer>
+
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /* ================= SAMPLE DATA ================= */
+
+        const months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        ];
+
+
+        const salesData = [
+            42000,
+            48000,
+            51000,
+            47000,
+            58000,
+            62000,
+            69000,
+            72000,
+            68000,
+            85000,
+            78000,
+            90000
+        ];
+
+
+        let salesChart;
+        let distributionChart;
+
+
+        /* ================= FORMAT ================= */
+
+        function formatCurrency(value) {
+
+            return "₹" +
+                Math.round(value)
+                    .toLocaleString();
+
+        }
+
+
+        /* ================= SALES CHART ================= */
+
+        function createSalesChart() {
+
+            const ctx =
+                document
+                .getElementById(
+                    "salesChart"
+                )
+                .getContext("2d");
+
+
+            if (salesChart) {
+
+                salesChart.destroy();
+
+            }
+
+
+            salesChart =
+                new Chart(ctx, {
+
+                    type: "line",
+
+                    data: {
+
+                        labels: months,
+
+                        datasets: [{
+
+                            label: "Sales",
+
+                            data: salesData,
+
+                            borderColor:
+                                "#f5c842",
+
+                            backgroundColor:
+                                "rgba(245,200,66,0.08)",
+
+                            borderWidth: 3,
+
+                            pointRadius: 4,
+
+                            tension: 0.35,
+
+                            fill: true
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        plugins: {
+
+                            legend: {
+
+                                labels: {
+                                    color: "#fff"
+                                }
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+
+                                ticks: {
+                                    color: "#888"
+                                },
+
+                                grid: {
+                                    color:
+                                        "rgba(255,255,255,0.05)"
+                                }
+
+                            },
+
+                            y: {
+
+                                ticks: {
+
+                                    color: "#888",
+
+                                    callback:
+                                        function(value) {
+
+                                            return "₹" +
+                                                value /
+                                                1000 +
+                                                "K";
+
+                                        }
+
+                                },
+
+                                grid: {
+                                    color:
+                                        "rgba(255,255,255,0.05)"
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+        }
+
+
+        /* ================= DISTRIBUTION ================= */
+
+        function createDistributionChart() {
+
+            const ctx =
+                document
+                .getElementById(
+                    "distributionChart"
+                )
+                .getContext("2d");
+
+
+            if (distributionChart) {
+
+                distributionChart.destroy();
+
+            }
+
+
+            distributionChart =
+                new Chart(ctx, {
+
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: [
+                            "Product A",
+                            "Product B",
+                            "Product C",
+                            "Product D"
+                        ],
+
+                        datasets: [{
+
+                            data: [
+                                35,
+                                28,
+                                22,
+                                15
+                            ],
+
+                            borderWidth: 1
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position: "bottom",
+
+                                labels: {
+                                    color: "#fff"
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+        }
+
+
+        /* ================= GENERATE REPORT ================= */
+
+        function generateReport() {
+
+            const status =
+                document.getElementById(
+                    "status"
+                );
+
+
+            status.style.display =
+                "block";
+
+
+            setTimeout(() => {
+
+                const dataset =
+                    document.getElementById(
+                        "dataset"
+                    ).value;
+
+
+                const reportType =
+                    document.getElementById(
+                        "reportType"
+                    ).value;
+
+
+                document.getElementById(
+                    "reportTitle"
+                ).textContent =
+                    "Velocity BI — " +
+                    getReportName(
+                        reportType
+                    );
+
+
+                document.getElementById(
+                    "reportSubtitle"
+                ).textContent =
+                    dataset +
+                    " | Business Intelligence Analysis";
+
+
+                updateStatistics();
+
+
+                createSalesChart();
+
+                createDistributionChart();
+
+
+                status.style.display =
+                    "none";
+
+
+            }, 600);
+
+        }
+
+
+        /* ================= REPORT NAME ================= */
+
+        function getReportName(type) {
+
+            if (
+                type === "analytics"
+            ) {
+                return "Data Analytics Report";
+            }
+
+
+            if (
+                type === "forecast"
+            ) {
+                return "Forecast Report";
+            }
+
+
+            if (
+                type === "complete"
+            ) {
+                return "Complete BI Report";
+            }
+
+
+            return "Executive Report";
+
+        }
+
+
+        /* ================= STATISTICS ================= */
+
+        function updateStatistics() {
+
+            const total =
+                salesData.reduce(
+                    (sum, value) =>
+                        sum + value,
+                    0
+                );
+
+
+            const average =
+                total /
+                salesData.length;
+
+
+            const growth =
+                (
+                    (
+                        salesData[
+                            salesData.length - 1
+                        ] -
+                        salesData[0]
+                    ) /
+                    salesData[0]
+                ) * 100;
+
+
+            document.getElementById(
+                "totalSales"
+            ).textContent =
+                formatCurrency(total);
+
+
+            document.getElementById(
+                "averageSales"
+            ).textContent =
+                formatCurrency(
+                    average
+                );
+
+
+            document.getElementById(
+                "growth"
+            ).textContent =
+                (growth >= 0 ? "+" : "") +
+                growth.toFixed(1) +
+                "%";
+
+
+            document.getElementById(
+                "records"
+            ).textContent =
+                salesData.length;
+
+        }
+
+
+        /* ================= PRINT ================= */
+
+        function printReport() {
+
+            window.print();
+
+        }
+
+
+        /* ================= CSV ================= */
+
+        function downloadCSV() {
+
+            let csv =
+                "Month,Sales\n";
+
+
+            months.forEach(
+                (month, index) => {
+
+                    csv +=
+                        month +
+                        "," +
+                        salesData[index] +
+                        "\n";
+
+                }
+            );
+
+
+            const blob =
+                new Blob(
+                    [csv],
+                    {
+                        type:
+                            "text/csv"
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+
+            link.href = url;
+
+            link.download =
+                "velocity-bi-report.csv";
+
+
+            link.click();
+
+
+            URL.revokeObjectURL(url);
+
+        }
+
+
+        /* ================= INITIAL LOAD ================= */
+
+        window.onload =
+            function() {
+
+                createSalesChart();
+
+                createDistributionChart();
+
+                updateStatistics();
+
+            };
+
+    </script>
+
+</body>
+</html>

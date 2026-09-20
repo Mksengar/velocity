@@ -1,0 +1,1571 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #0a0a0f;
+            color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #111118;
+            border-right: 1px solid #25252e;
+            padding: 25px 18px;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .logo {
+            font-family: "Syne", sans-serif;
+            font-size: 25px;
+            font-weight: 800;
+            padding-left: 12px;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #f5c842;
+        }
+
+        .nav-title {
+            color: #777783;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 20px 12px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin: 5px 0;
+            border-radius: 9px;
+            color: #aaaab5;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #1b1b24;
+            color: #ffffff;
+        }
+
+        .nav-item.active {
+            background: #f5c842;
+            color: #0a0a0f;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* ================= MAIN ================= */
+
+        .main {
+            margin-left: 250px;
+            padding: 30px 40px;
+            max-width: 1400px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-family: "Syne", sans-serif;
+            font-size: 32px;
+        }
+
+        .page-subtitle {
+            color: #858590;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #15151d;
+            border: 1px solid #282832;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .mini-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 12px 7px 7px;
+            background: #15151d;
+            border: 1px solid #282832;
+            border-radius: 10px;
+        }
+
+        .mini-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f5c842;
+            color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 230px 1fr;
+            gap: 25px;
+        }
+
+        .settings-menu {
+            background: #111118;
+            border: 1px solid #25252e;
+            border-radius: 15px;
+            padding: 12px;
+            height: fit-content;
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px;
+            margin-bottom: 4px;
+            border-radius: 9px;
+            color: #aaaab5;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .settings-menu-item:hover {
+            background: #1b1b24;
+            color: #fff;
+        }
+
+        .settings-menu-item.active {
+            background: #24231a;
+            color: #f5c842;
+        }
+
+        .settings-content {
+            min-width: 0;
+        }
+
+        .settings-section {
+            background: #111118;
+            border: 1px solid #25252e;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #25252e;
+        }
+
+        .section-title {
+            font-family: "Syne", sans-serif;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #777783;
+            font-size: 13px;
+        }
+
+        /* ================= FORM ================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #aaaab5;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            background: #0b0b10;
+            border: 1px solid #292933;
+            border-radius: 9px;
+            color: #fff;
+            font-family: inherit;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #f5c842;
+        }
+
+        select option {
+            background: #111118;
+        }
+
+        /* ================= TOGGLE ================= */
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid #24242d;
+        }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .setting-description {
+            color: #777783;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #292933;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: #aaaab5;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .switch input:checked + .slider {
+            background: #f5c842;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(22px);
+            background: #111;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 9px;
+            font-weight: 600;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #f5c842;
+            color: #101010;
+        }
+
+        .btn-primary:hover {
+            background: #ffd95d;
+        }
+
+        .btn-secondary {
+            background: #20202a;
+            color: #ddd;
+            border: 1px solid #30303a;
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: #ff6b6b;
+            border: 1px solid #5a2929;
+        }
+
+        .btn-danger:hover {
+            background: #251414;
+        }
+
+        /* ================= SECURITY ================= */
+
+        .security-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid #25252e;
+        }
+
+        .security-item:last-child {
+            border-bottom: none;
+        }
+
+        .security-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #20202a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .security-info {
+            flex: 1;
+        }
+
+        .security-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .security-description {
+            color: #777783;
+            font-size: 12px;
+        }
+
+        /* ================= DANGER ZONE ================= */
+
+        .danger-zone {
+            border-color: #4b2525;
+        }
+
+        .danger-title {
+            color: #ff6b6b;
+        }
+
+        .danger-text {
+            color: #999;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 25px 20px;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-menu {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .top-actions {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 26px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .settings-menu {
+                grid-template-columns: 1fr;
+            }
+
+            .setting-row,
+            .security-item {
+                align-items: flex-start;
+            }
+
+            .button-row {
+                justify-content: stretch;
+            }
+
+            .button-row button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="logo">
+            Velocity<span>BI</span>
+        </div>
+
+        <div class="nav-title">Main</div>
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            Dashboard
+        </a>
+
+        <a href="dataset-upload.html" class="nav-item">
+            <span class="nav-icon">↑</span>
+            Upload Dataset
+        </a>
+
+        <a href="dataset-preview.html" class="nav-item">
+            <span class="nav-icon">▦</span>
+            Datasets
+        </a>
+
+        <a href="eda.html" class="nav-item">
+            <span class="nav-icon">◈</span>
+            EDA
+        </a>
+
+        <a href="visualization.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            Visualization
+        </a>
+
+        <a href="dashboard-builder.html" class="nav-item">
+            <span class="nav-icon">▤</span>
+            Dashboard Builder
+        </a>
+
+        <a href="reports.html" class="nav-item">
+            <span class="nav-icon">▧</span>
+            Reports
+        </a>
+
+        <div class="nav-title">Account</div>
+
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">●</span>
+            Profile
+        </a>
+
+        <a href="settings.html" class="nav-item active">
+            <span class="nav-icon">⚙</span>
+            Settings
+        </a>
+
+        <a href="index.html" class="nav-item" onclick="logout()">
+            <span class="nav-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+
+                <div style="display:flex;align-items:center;gap:15px;">
+
+                    <span
+                        class="mobile-menu"
+                        onclick="toggleSidebar()">
+                        ☰
+                    </span>
+
+                    <div>
+
+                        <h1 class="page-title">
+                            Settings
+                        </h1>
+
+                        <p class="page-subtitle">
+                            Manage your account, preferences and security.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="top-actions">
+
+                <div class="notification">
+                    🔔
+                </div>
+
+                <div class="mini-profile">
+
+                    <div class="mini-avatar">
+                        VS
+                    </div>
+
+                    <span>
+                        Velocity User
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= SETTINGS ================= -->
+
+        <div class="settings-layout">
+
+            <!-- Settings Menu -->
+
+            <div class="settings-menu">
+
+                <div
+                    class="settings-menu-item active"
+                    onclick="showSection('general', this)">
+                    ⚙️ General
+                </div>
+
+                <div
+                    class="settings-menu-item"
+                    onclick="showSection('notifications', this)">
+                    🔔 Notifications
+                </div>
+
+                <div
+                    class="settings-menu-item"
+                    onclick="showSection('security', this)">
+                    🔐 Security
+                </div>
+
+                <div
+                    class="settings-menu-item"
+                    onclick="showSection('data', this)">
+                    🗄️ Data & Privacy
+                </div>
+
+            </div>
+
+
+            <!-- Settings Content -->
+
+            <div class="settings-content">
+
+
+                <!-- ================= GENERAL ================= -->
+
+                <section id="general" class="settings-section">
+
+                    <div class="section-header">
+
+                        <h2 class="section-title">
+                            General Settings
+                        </h2>
+
+                        <p class="section-description">
+                            Configure your basic Velocity BI preferences.
+                        </p>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="language">
+                                Language
+                            </label>
+
+                            <select id="language">
+
+                                <option selected>
+                                    English
+                                </option>
+
+                                <option>
+                                    Hindi
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="timezone">
+                                Time Zone
+                            </label>
+
+                            <select id="timezone">
+
+                                <option selected>
+                                    Asia/Kolkata (IST)
+                                </option>
+
+                                <option>
+                                    UTC
+                                </option>
+
+                                <option>
+                                    America/New_York
+                                </option>
+
+                                <option>
+                                    Europe/London
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="dateFormat">
+                                Date Format
+                            </label>
+
+                            <select id="dateFormat">
+
+                                <option selected>
+                                    DD/MM/YYYY
+                                </option>
+
+                                <option>
+                                    MM/DD/YYYY
+                                </option>
+
+                                <option>
+                                    YYYY-MM-DD
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="dashboardRefresh">
+                                Dashboard Refresh
+                            </label>
+
+                            <select id="dashboardRefresh">
+
+                                <option>
+                                    Every 5 minutes
+                                </option>
+
+                                <option selected>
+                                    Every 15 minutes
+                                </option>
+
+                                <option>
+                                    Every 30 minutes
+                                </option>
+
+                                <option>
+                                    Manual
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="resetSettings()">
+                            Reset
+                        </button>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="saveGeneralSettings()">
+                            Save Changes
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= NOTIFICATIONS ================= -->
+
+                <section
+                    id="notifications"
+                    class="settings-section"
+                    style="display:none;">
+
+                    <div class="section-header">
+
+                        <h2 class="section-title">
+                            Notifications
+                        </h2>
+
+                        <p class="section-description">
+                            Choose which notifications you want to receive.
+                        </p>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-name">
+                                Email Notifications
+                            </div>
+
+                            <div class="setting-description">
+                                Receive important updates and account notifications by email.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="emailNotifications"
+                                checked>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-name">
+                                Dataset Processing
+                            </div>
+
+                            <div class="setting-description">
+                                Get notified when dataset processing is completed.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="datasetNotifications"
+                                checked>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-name">
+                                Report Generation
+                            </div>
+
+                            <div class="setting-description">
+                                Receive notifications when reports are generated.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="reportNotifications"
+                                checked>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-name">
+                                Product Updates
+                            </div>
+
+                            <div class="setting-description">
+                                Receive information about new Velocity BI features.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="productNotifications">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="button-row">
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="saveNotifications()">
+                            Save Notifications
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= SECURITY ================= -->
+
+                <section
+                    id="security"
+                    class="settings-section"
+                    style="display:none;">
+
+                    <div class="section-header">
+
+                        <h2 class="section-title">
+                            Security
+                        </h2>
+
+                        <p class="section-description">
+                            Protect your Velocity BI account.
+                        </p>
+
+                    </div>
+
+
+                    <div class="security-item">
+
+                        <div class="security-icon">
+                            🔑
+                        </div>
+
+                        <div class="security-info">
+
+                            <div class="security-title">
+                                Change Password
+                            </div>
+
+                            <div class="security-description">
+                                Update your account password regularly.
+                            </div>
+
+                        </div>
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="changePassword()">
+                            Change
+                        </button>
+
+                    </div>
+
+
+                    <div class="security-item">
+
+                        <div class="security-icon">
+                            🛡️
+                        </div>
+
+                        <div class="security-info">
+
+                            <div class="security-title">
+                                Two-Factor Authentication
+                            </div>
+
+                            <div class="security-description">
+                                Add an additional layer of security to your account.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="twoFactor">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="security-item">
+
+                        <div class="security-icon">
+                            💻
+                        </div>
+
+                        <div class="security-info">
+
+                            <div class="security-title">
+                                Login Sessions
+                            </div>
+
+                            <div class="security-description">
+                                Manage devices currently logged into your account.
+                            </div>
+
+                        </div>
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="manageSessions()">
+                            Manage
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= DATA & PRIVACY ================= -->
+
+                <section
+                    id="data"
+                    class="settings-section"
+                    style="display:none;">
+
+                    <div class="section-header">
+
+                        <h2 class="section-title">
+                            Data & Privacy
+                        </h2>
+
+                        <p class="section-description">
+                            Manage your datasets and account data.
+                        </p>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-name">
+                                Save Analysis History
+                            </div>
+
+                            <div class="setting-description">
+                                Keep your previous analysis results available in your account.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="analysisHistory"
+                                checked>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div class="setting-info">
+
+                            <div class="setting-name">
+                                Automatic Dataset Backup
+                            </div>
+
+                            <div class="setting-description">
+                                Automatically create backups of uploaded datasets.
+                            </div>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                id="datasetBackup"
+                                checked>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="button-row">
+
+                        <button
+                            class="btn btn-secondary"
+                            onclick="downloadData()">
+                            Download My Data
+                        </button>
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="savePrivacy()">
+                            Save Preferences
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================= DANGER ZONE ================= -->
+
+                <section class="settings-section danger-zone">
+
+                    <div class="section-header">
+
+                        <h2 class="section-title danger-title">
+                            Danger Zone
+                        </h2>
+
+                        <p class="section-description">
+                            Actions here can affect your account permanently.
+                        </p>
+
+                    </div>
+
+                    <p class="danger-text">
+                        Deleting your account may permanently remove your
+                        profile, datasets, dashboards and generated reports.
+                        This action should only be performed if you are sure.
+                    </p>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deleteAccount()">
+                        Delete Account
+                    </button>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        // Mobile sidebar
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList.toggle("open");
+
+        }
+
+
+        // Switch settings sections
+        function showSection(sectionId, element) {
+
+            const sections = [
+                "general",
+                "notifications",
+                "security",
+                "data"
+            ];
+
+            sections.forEach(function(section) {
+
+                document.getElementById(section).style.display =
+                    "none";
+
+            });
+
+            document.getElementById(sectionId).style.display =
+                "block";
+
+
+            document
+                .querySelectorAll(".settings-menu-item")
+                .forEach(function(item) {
+
+                    item.classList.remove("active");
+
+                });
+
+            element.classList.add("active");
+
+        }
+
+
+        // Save general settings
+        function saveGeneralSettings() {
+
+            const settings = {
+
+                language:
+                    document.getElementById("language").value,
+
+                timezone:
+                    document.getElementById("timezone").value,
+
+                dateFormat:
+                    document.getElementById("dateFormat").value,
+
+                dashboardRefresh:
+                    document.getElementById("dashboardRefresh").value
+
+            };
+
+            localStorage.setItem(
+                "velocityGeneralSettings",
+                JSON.stringify(settings)
+            );
+
+            alert("General settings saved successfully!");
+
+        }
+
+
+        // Save notification settings
+        function saveNotifications() {
+
+            const notifications = {
+
+                email:
+                    document.getElementById("emailNotifications").checked,
+
+                dataset:
+                    document.getElementById("datasetNotifications").checked,
+
+                report:
+                    document.getElementById("reportNotifications").checked,
+
+                product:
+                    document.getElementById("productNotifications").checked
+
+            };
+
+            localStorage.setItem(
+                "velocityNotifications",
+                JSON.stringify(notifications)
+            );
+
+            alert("Notification settings saved!");
+
+        }
+
+
+        // Save privacy settings
+        function savePrivacy() {
+
+            const privacy = {
+
+                analysisHistory:
+                    document.getElementById("analysisHistory").checked,
+
+                datasetBackup:
+                    document.getElementById("datasetBackup").checked
+
+            };
+
+            localStorage.setItem(
+                "velocityPrivacy",
+                JSON.stringify(privacy)
+            );
+
+            alert("Privacy settings saved!");
+
+        }
+
+
+        // Reset general settings
+        function resetSettings() {
+
+            document.getElementById("language").value =
+                "English";
+
+            document.getElementById("timezone").value =
+                "Asia/Kolkata (IST)";
+
+            document.getElementById("dateFormat").value =
+                "DD/MM/YYYY";
+
+            document.getElementById("dashboardRefresh").value =
+                "Every 15 minutes";
+
+        }
+
+
+        // Change password
+        function changePassword() {
+
+            const newPassword =
+                prompt("Enter your new password:");
+
+            if (!newPassword) {
+                return;
+            }
+
+            if (newPassword.length < 6) {
+
+                alert(
+                    "Password must contain at least 6 characters."
+                );
+
+                return;
+            }
+
+            alert(
+                "Password change request submitted."
+            );
+
+        }
+
+
+        // Manage sessions
+        function manageSessions() {
+
+            alert(
+                "Session management will be connected to the Flask backend."
+            );
+
+        }
+
+
+        // Download user data
+        function downloadData() {
+
+            const data = {
+
+                profile: "Velocity User",
+
+                datasets: 12,
+
+                reports: 8,
+
+                analyses: 24,
+
+                exportedAt:
+                    new Date().toISOString()
+
+            };
+
+            const blob = new Blob(
+                [JSON.stringify(data, null, 2)],
+                { type: "application/json" }
+            );
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement("a");
+
+            link.href = url;
+
+            link.download =
+                "velocity-bi-user-data.json";
+
+            link.click();
+
+            URL.revokeObjectURL(url);
+
+        }
+
+
+        // Delete account
+        function deleteAccount() {
+
+            const confirmation =
+                prompt(
+                    "Type DELETE to permanently delete your account:"
+                );
+
+            if (confirmation !== "DELETE") {
+
+                alert(
+                    "Account deletion cancelled."
+                );
+
+                return;
+
+            }
+
+            localStorage.clear();
+
+            alert(
+                "Account deletion request submitted."
+            );
+
+            window.location.href =
+                "index.html";
+
+        }
+
+
+        // Logout
+        function logout() {
+
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("token");
+
+        }
+
+
+        // Load saved settings
+        window.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                const general =
+                    localStorage.getItem(
+                        "velocityGeneralSettings"
+                    );
+
+                if (general) {
+
+                    const settings =
+                        JSON.parse(general);
+
+                    document.getElementById("language").value =
+                        settings.language || "English";
+
+                    document.getElementById("timezone").value =
+                        settings.timezone ||
+                        "Asia/Kolkata (IST)";
+
+                    document.getElementById("dateFormat").value =
+                        settings.dateFormat ||
+                        "DD/MM/YYYY";
+
+                    document.getElementById("dashboardRefresh").value =
+                        settings.dashboardRefresh ||
+                        "Every 15 minutes";
+
+                }
+
+
+                const notifications =
+                    localStorage.getItem(
+                        "velocityNotifications"
+                    );
+
+                if (notifications) {
+
+                    const data =
+                        JSON.parse(notifications);
+
+                    document.getElementById(
+                        "emailNotifications"
+                    ).checked = data.email;
+
+                    document.getElementById(
+                        "datasetNotifications"
+                    ).checked = data.dataset;
+
+                    document.getElementById(
+                        "reportNotifications"
+                    ).checked = data.report;
+
+                    document.getElementById(
+                        "productNotifications"
+                    ).checked = data.product;
+
+                }
+
+
+                const privacy =
+                    localStorage.getItem(
+                        "velocityPrivacy"
+                    );
+
+                if (privacy) {
+
+                    const data =
+                        JSON.parse(privacy);
+
+                    document.getElementById(
+                        "analysisHistory"
+                    ).checked = data.analysisHistory;
+
+                    document.getElementById(
+                        "datasetBackup"
+                    ).checked = data.datasetBackup;
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
+```

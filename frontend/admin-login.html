@@ -1,0 +1,929 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | Velocity BI</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/animations.css">   
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "DM Sans", sans-serif;
+            background: #0a0a0f;
+            color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        /* Background */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(245, 200, 66, 0.06);
+            filter: blur(100px);
+        }
+
+        .glow-one {
+            top: -180px;
+            left: -150px;
+        }
+
+        .glow-two {
+            bottom: -200px;
+            right: -150px;
+        }
+
+        /* Container */
+
+        .login-container {
+            width: 100%;
+            max-width: 460px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Logo */
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            font-family: "Syne", sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #f5c842;
+        }
+
+        .admin-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #24231a;
+            color: #f5c842;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid #4b4321;
+        }
+
+        /* Login Card */
+
+        .login-card {
+            background: #111118;
+            border: 1px solid #292933;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .admin-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background: #24231a;
+            border: 1px solid #4b4321;
+
+            font-size: 30px;
+        }
+
+        .login-title {
+            font-family: "Syne", sans-serif;
+            font-size: 27px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #81818c;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        /* Form */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #b7b7c0;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777783;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            padding: 0 45px 0 42px;
+
+            background: #0b0b10;
+            border: 1px solid #292933;
+            border-radius: 9px;
+
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input::placeholder {
+            color: #5f5f69;
+        }
+
+        input:focus {
+            border-color: #f5c842;
+            box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.07);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            background: transparent;
+            border: none;
+
+            color: #777783;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .password-toggle:hover {
+            color: #f5c842;
+        }
+
+        /* Options */
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #858590;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .remember input {
+            width: 15px;
+            height: 15px;
+            accent-color: #f5c842;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #f5c842;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        /* Button */
+
+        .login-btn {
+            width: 100%;
+            height: 49px;
+
+            background: #f5c842;
+            color: #101010;
+
+            border: none;
+            border-radius: 9px;
+
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #ffd95d;
+            transform: translateY(-1px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Error */
+
+        .error-message {
+            display: none;
+            padding: 11px 13px;
+            margin-bottom: 18px;
+
+            background: #251414;
+            border: 1px solid #5a2929;
+            border-radius: 8px;
+
+            color: #ff8585;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Success */
+
+        .success-message {
+            display: none;
+            padding: 11px 13px;
+            margin-bottom: 18px;
+
+            background: #172319;
+            border: 1px solid #315337;
+            border-radius: 8px;
+
+            color: #86d68f;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Divider */
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 25px 0;
+            color: #555560;
+            font-size: 11px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: #282832;
+        }
+
+        /* Back */
+
+        .back-link {
+            display: block;
+            text-align: center;
+            color: #888894;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #f5c842;
+        }
+
+        /* Security Notice */
+
+        .security-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            margin-top: 22px;
+            padding: 13px;
+
+            background: #0d0d13;
+            border: 1px solid #22222b;
+            border-radius: 9px;
+
+            color: #73737e;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .security-notice strong {
+            color: #aaaab4;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            margin-top: 22px;
+            color: #555560;
+            font-size: 11px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 500px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .login-card {
+                padding: 25px 20px;
+            }
+
+            .login-title {
+                font-size: 24px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+
+    <div class="background">
+
+        <div class="glow glow-one"></div>
+        <div class="glow glow-two"></div>
+
+    </div>
+
+
+    <!-- Login Container -->
+
+    <div class="login-container">
+
+        <!-- Logo -->
+
+        <div class="logo-container">
+
+            <div class="logo">
+                Velocity<span>BI</span>
+            </div>
+
+            <div class="admin-label">
+                🔐 Administrator Portal
+            </div>
+
+        </div>
+
+
+        <!-- Card -->
+
+        <div class="login-card">
+
+            <div class="admin-icon">
+                🛡️
+            </div>
+
+            <h1 class="login-title">
+                Admin Login
+            </h1>
+
+            <p class="login-subtitle">
+                Sign in to access the Velocity BI administration dashboard.
+            </p>
+
+
+            <!-- Error -->
+
+            <div
+                class="error-message"
+                id="errorMessage">
+            </div>
+
+
+            <!-- Success -->
+
+            <div
+                class="success-message"
+                id="successMessage">
+            </div>
+
+
+            <!-- Form -->
+
+            <form id="adminLoginForm">
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="adminEmail">
+                        Admin Email
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                        <input
+                            type="email"
+                            id="adminEmail"
+                            placeholder="admin@example.com"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="adminPassword">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔑
+                        </span>
+
+                        <input
+                            type="password"
+                            id="adminPassword"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            onclick="togglePassword()"
+                            aria-label="Show password">
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Options -->
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe">
+
+                        Remember me
+
+                    </label>
+
+                    <span
+                        class="forgot-password"
+                        onclick="forgotPassword()">
+                        Forgot password?
+                    </span>
+
+                </div>
+
+
+                <!-- Login -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                    id="loginBtn">
+
+                    Login to Admin Panel
+
+                </button>
+
+            </form>
+
+
+            <!-- Divider -->
+
+            <div class="divider">
+                SECURE ADMIN ACCESS
+            </div>
+
+
+            <!-- Back -->
+
+            <a
+                href="login.html"
+                class="back-link">
+
+                ← Back to User Login
+
+            </a>
+
+
+            <!-- Security -->
+
+            <div class="security-notice">
+
+                <span>🔒</span>
+
+                <div>
+                    <strong>Security Notice</strong><br>
+
+                    This area is restricted to authorized
+                    Velocity BI administrators. All login
+                    attempts should be authenticated through
+                    the backend.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer">
+            © 2026 Velocity BI. All rights reserved.
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /*
+         * IMPORTANT:
+         * This frontend validation is only for UI testing.
+         * Real admin authentication should be handled
+         * by your Flask + MySQL backend.
+         */
+
+
+        // Password visibility
+
+        function togglePassword() {
+
+            const password =
+                document.getElementById("adminPassword");
+
+            const toggle =
+                document.getElementById("passwordToggle");
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                toggle.textContent = "🙈";
+
+                toggle.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+            } else {
+
+                password.type = "password";
+
+                toggle.textContent = "👁";
+
+                toggle.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
+
+        }
+
+
+        // Show error
+
+        function showError(message) {
+
+            const error =
+                document.getElementById("errorMessage");
+
+            const success =
+                document.getElementById("successMessage");
+
+            success.classList.remove("show");
+
+            error.textContent = message;
+
+            error.classList.add("show");
+
+        }
+
+
+        // Show success
+
+        function showSuccess(message) {
+
+            const error =
+                document.getElementById("errorMessage");
+
+            const success =
+                document.getElementById("successMessage");
+
+            error.classList.remove("show");
+
+            success.textContent = message;
+
+            success.classList.add("show");
+
+        }
+
+
+        // Forgot password
+
+        function forgotPassword() {
+
+            const email =
+                document.getElementById("adminEmail").value.trim();
+
+            if (!email) {
+
+                showError(
+                    "Please enter your admin email first."
+                );
+
+                document
+                    .getElementById("adminEmail")
+                    .focus();
+
+                return;
+
+            }
+
+            alert(
+                "Password reset functionality will be connected to your Flask backend."
+            );
+
+        }
+
+
+        // Login form
+
+        document
+            .getElementById("adminLoginForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                        .getElementById("adminEmail")
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById("adminPassword")
+                        .value;
+
+                const rememberMe =
+                    document
+                        .getElementById("rememberMe")
+                        .checked;
+
+                const loginButton =
+                    document
+                        .getElementById("loginBtn");
+
+
+                // Validation
+
+                if (!email || !password) {
+
+                    showError(
+                        "Please enter your admin email and password."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!email.includes("@")) {
+
+                    showError(
+                        "Please enter a valid email address."
+                    );
+
+                    return;
+
+                }
+
+
+                if (password.length < 6) {
+
+                    showError(
+                        "Password must contain at least 6 characters."
+                    );
+
+                    return;
+
+                }
+
+
+                // Loading
+
+                loginButton.classList.add("loading");
+
+                loginButton.textContent =
+                    "Authenticating...";
+
+
+                try {
+                    const response = await fetch(
+                        "http://127.0.0.1:5000/api/admin/login",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                email,
+                                password
+                            })
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        throw new Error(
+                            data.message ||
+                            data.error ||
+                            "Invalid admin credentials."
+                        );
+                    }
+
+                    const admin = {
+                        ...(data.admin || {}),
+                        loginTime: new Date().toISOString()
+                    };
+
+                    localStorage.setItem(
+                        "velocityAdmin",
+                        JSON.stringify(admin)
+                    );
+
+                    if (!rememberMe) {
+                        sessionStorage.setItem(
+                            "velocityAdmin",
+                            JSON.stringify(admin)
+                        );
+                    }
+
+                    showSuccess("Login successful. Redirecting...");
+
+                    setTimeout(function() {
+                        window.location.href = "admin-dashboard.html";
+                    }, 800);
+                } catch (error) {
+                    showError(
+                        error.message ||
+                        "Unable to connect to the admin server."
+                    );
+                } finally {
+                    loginButton.classList.remove("loading");
+                    loginButton.textContent = "Login to Admin Panel";
+                }
+
+            });
+
+
+        // Load remembered admin
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                const savedAdmin =
+                    localStorage.getItem(
+                        "velocityAdmin"
+                    );
+
+                if (!savedAdmin) {
+                    return;
+                }
+
+                try {
+
+                    const admin =
+                        JSON.parse(savedAdmin);
+
+                    if (admin.email) {
+
+                        document
+                            .getElementById("adminEmail")
+                            .value = admin.email;
+
+                        document
+                            .getElementById("rememberMe")
+                            .checked = true;
+
+                    }
+
+                } catch (error) {
+
+                    localStorage.removeItem(
+                        "velocityAdmin"
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
+```

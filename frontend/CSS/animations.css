@@ -1,0 +1,667 @@
+/* =========================================
+   VELOCITY BI - ANIMATIONS CSS
+   ========================================= */
+
+/* -----------------------------------------
+   1. GLOBAL PAGE ANIMATION
+   ----------------------------------------- */
+
+body {
+    animation: pageFadeIn 0.5s ease-out;
+}
+
+@keyframes pageFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* -----------------------------------------
+   2. PAGE SLIDE ANIMATION
+   ----------------------------------------- */
+
+.page-content {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* -----------------------------------------
+   3. CARD ANIMATION
+   ----------------------------------------- */
+
+.card,
+.stat-card,
+.chart-card,
+.dashboard-card {
+    animation: cardAppear 0.5s ease-out both;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* -----------------------------------------
+   4. CARD HOVER
+   ----------------------------------------- */
+
+.card,
+.stat-card,
+.chart-card,
+.dashboard-card {
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.card:hover,
+.stat-card:hover,
+.dashboard-card:hover {
+    transform: translateY(-4px);
+}
+
+
+/* -----------------------------------------
+   5. BUTTON ANIMATION
+   ----------------------------------------- */
+
+button,
+.btn {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+button:hover,
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+button:active,
+.btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+
+/* -----------------------------------------
+   6. BUTTON RIPPLE EFFECT
+   ----------------------------------------- */
+
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ripple:active::after {
+    animation: rippleEffect 0.5s ease-out;
+}
+
+@keyframes rippleEffect {
+    0% {
+        transform: scale(0);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(20);
+        opacity: 0;
+    }
+}
+
+
+/* -----------------------------------------
+   7. SIDEBAR ANIMATION
+   ----------------------------------------- */
+
+.sidebar {
+    animation: sidebarSlide 0.5s ease-out;
+}
+
+@keyframes sidebarSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* -----------------------------------------
+   8. NAVIGATION ITEM
+   ----------------------------------------- */
+
+.nav-item {
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nav-item:hover {
+    transform: translateX(4px);
+}
+
+
+/* -----------------------------------------
+   9. ICON ANIMATION
+   ----------------------------------------- */
+
+.icon,
+.nav-item i {
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
+}
+
+.nav-item:hover i {
+    transform: scale(1.15);
+}
+
+
+/* -----------------------------------------
+   10. LOGO ANIMATION
+   ----------------------------------------- */
+
+.logo {
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.04);
+}
+
+
+/* -----------------------------------------
+   11. INPUT FOCUS ANIMATION
+   ----------------------------------------- */
+
+input,
+select,
+textarea {
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    transform: translateY(-1px);
+}
+
+
+/* -----------------------------------------
+   12. SEARCH BOX
+   ----------------------------------------- */
+
+.search-box {
+    transition:
+        width 0.3s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.search-box:focus-within {
+    box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.1);
+}
+
+
+/* -----------------------------------------
+   13. DROPDOWN ANIMATION
+   ----------------------------------------- */
+
+.dropdown-menu {
+    animation: dropdownOpen 0.2s ease-out;
+    transform-origin: top;
+}
+
+@keyframes dropdownOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* -----------------------------------------
+   14. MODAL ANIMATION
+   ----------------------------------------- */
+
+.modal {
+    animation: modalBackground 0.25s ease-out;
+}
+
+.modal-content {
+    animation: modalOpen 0.3s ease-out;
+}
+
+@keyframes modalBackground {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-25px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* -----------------------------------------
+   15. CHART ANIMATION
+   ----------------------------------------- */
+
+.chart-container {
+    animation: chartAppear 0.7s ease-out;
+}
+
+@keyframes chartAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* -----------------------------------------
+   16. STAT NUMBER ANIMATION
+   ----------------------------------------- */
+
+.stat-value {
+    animation: numberAppear 0.6s ease-out;
+}
+
+@keyframes numberAppear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* -----------------------------------------
+   17. LOADING SPINNER
+   ----------------------------------------- */
+
+.spinner {
+    width: 32px;
+    height: 32px;
+
+    border: 3px solid #292933;
+    border-top-color: #f5c842;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* -----------------------------------------
+   18. PULSE ANIMATION
+   ----------------------------------------- */
+
+.pulse {
+    animation: pulseAnimation 2s infinite;
+}
+
+@keyframes pulseAnimation {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* -----------------------------------------
+   19. STATUS DOT
+   ----------------------------------------- */
+
+.status-dot {
+    animation: statusPulse 2s infinite;
+}
+
+@keyframes statusPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+    }
+}
+
+
+/* -----------------------------------------
+   20. SUCCESS ANIMATION
+   ----------------------------------------- */
+
+.success-animation {
+    animation: successPop 0.5s ease-out;
+}
+
+@keyframes successPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+
+    70% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* -----------------------------------------
+   21. ERROR SHAKE
+   ----------------------------------------- */
+
+.error-shake {
+    animation: errorShake 0.4s ease-in-out;
+}
+
+@keyframes errorShake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-6px);
+    }
+
+    50% {
+        transform: translateX(6px);
+    }
+
+    75% {
+        transform: translateX(-4px);
+    }
+}
+
+
+/* -----------------------------------------
+   22. UPLOAD BOX
+   ----------------------------------------- */
+
+.upload-box {
+    transition:
+        border-color 0.3s ease,
+        background 0.3s ease,
+        transform 0.3s ease;
+}
+
+.upload-box:hover {
+    transform: translateY(-3px);
+}
+
+.upload-box.dragover {
+    transform: scale(1.02);
+}
+
+
+/* -----------------------------------------
+   23. TABLE ROW ANIMATION
+   ----------------------------------------- */
+
+table tbody tr {
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+table tbody tr:hover {
+    transform: translateX(3px);
+}
+
+
+/* -----------------------------------------
+   24. TOOLTIP
+   ----------------------------------------- */
+
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+
+    transform: translateX(-50%) translateY(5px);
+
+    background: #181820;
+    color: #ffffff;
+
+    border: 1px solid #2b2b36;
+    border-radius: 6px;
+
+    padding: 6px 9px;
+
+    font-size: 12px;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+
+    z-index: 1000;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* -----------------------------------------
+   25. FADE UTILITIES
+   ----------------------------------------- */
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+
+/* -----------------------------------------
+   26. SLIDE UTILITIES
+   ----------------------------------------- */
+
+.slide-left {
+    animation: slideLeft 0.5s ease-out;
+}
+
+.slide-right {
+    animation: slideRight 0.5s ease-out;
+}
+
+@keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* -----------------------------------------
+   27. STAGGERED CARD ANIMATION
+   ----------------------------------------- */
+
+.dashboard-grid > *:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.dashboard-grid > *:nth-child(2) {
+    animation-delay: 0.10s;
+}
+
+.dashboard-grid > *:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.dashboard-grid > *:nth-child(4) {
+    animation-delay: 0.20s;
+}
+
+.dashboard-grid > *:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.dashboard-grid > *:nth-child(6) {
+    animation-delay: 0.30s;
+}
+
+
+/* -----------------------------------------
+   28. REDUCED MOTION ACCESSIBILITY
+   ----------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

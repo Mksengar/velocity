@@ -1,0 +1,173 @@
+# ==========================================
+# Velocity BI - Logging Middleware
+# File: backend/middleware/logging.py
+# ==========================================
+
+import logging
+import os
+import time
+
+from flask import request, g
+
+
+# ==========================================
+# Log Directory
+# ==========================================
+
+BASE_DIR = os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))
+)
+
+LOG_DIR = os.path.join(
+    BASE_DIR,
+    "logs"
+)
+
+LOG_FILE = os.path.join(
+    LOG_DIR,
+    "app.log"
+)
+
+
+# Create logs directory automatically
+os.makedirs(
+    LOG_DIR,
+    exist_ok=True
+)
+
+
+# ==========================================
+# Logger Configuration
+# ==========================================
+
+logger = logging.getLogger(
+    "velocity_bi"
+)
+
+logger.setLevel(
+    logging.INFO
+)
+
+
+# Prevent duplicate handlers
+if not logger.handlers:
+
+    # File handler
+    file_handler = logging.FileHandler(
+        LOG_FILE,
+        encoding="utf-8"
+    )
+
+    # Console handler
+    console_handler = logging.StreamHandler()
+
+    # Log format
+    formatter = logging.Formatter(
+        "[%(asctime)s] "
+        "[%(levelname)s] "
+        "%(name)s - "
+        "%(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+
+    file_handler.setFormatter(
+        formatter
+    )
+
+    console_handler.setFormatter(
+        formatter
+    )
+
+    logger.addHandler(
+        file_handler
+    )
+
+    logger.addHandler(
+        console_handler
+    )
+
+
+# ==========================================
+# Request Logging Middleware
+# ==========================================
+
+def request_logger(app):
+    """
+    Register request logging middleware.
+    """
+
+    @app.before_request
+    def before_request():
+
+        g.request_start_time = time.perf_counter()
+
+        logger.info(
+            "REQUEST START | %s %s | IP=%s",
+            request.method,
+            request.path,
+            request.remote_addr
+        )
+
+    @app.after_request
+    def after_request(response):
+
+        start_time = getattr(
+            g,
+            "request_start_time",
+            None
+        )
+
+        duration = 0.0
+
+        if start_time:
+            duration = (
+                time.perf_counter()
+                - start_time
+            )
+
+        logger.info(
+            "REQUEST END | %s %s | "
+            "STATUS=%s | TIME=%.4fs",
+            request.method,
+            request.path,
+            response.status_code,
+            duration
+        )
+
+        return response
+
+    @app.teardown_request
+    def teardown_request(exception):
+
+        if exception:
+
+            logger.exception(
+                "REQUEST ERROR | %s %s | ERROR=%s",
+                request.method,
+                request.path,
+                str(exception)
+            )
+
+
+# ==========================================
+# Application Log Functions
+# ==========================================
+
+def log_info(message, *args):
+    logger.info(message, *args)
+
+
+def log_warning(message, *args):
+    logger.warning(message, *args)
+
+
+def log_error(message, *args):
+    logger.error(message, *args)
+
+
+def log_debug(message, *args):
+    logger.debug(message, *args)
+
+
+def log_exception(message, *args):
+    logger.exception(message, *args)
