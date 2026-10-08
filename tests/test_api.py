@@ -411,7 +411,7 @@ def test_reports_endpoint_requires_auth(client):
     Test report endpoint authentication.
     """
 
-    response = client.get("/api/reports")
+    response = client.get("/api/reports/health")
 
     assert response.status_code in [
         401,
@@ -434,6 +434,43 @@ def test_reports_endpoint(client, auth_headers):
         200,
         404,
     ]
+
+
+def test_report_generation_requires_auth(client):
+    response = client.post(
+        "/api/reports/generate",
+        json={"dataset_id": "sample"},
+    )
+
+    assert response.status_code == 401
+
+
+def test_report_generation_from_dataset(client, auth_headers, tmp_path):
+    datasets_folder = tmp_path / "datasets"
+    reports_folder = tmp_path / "reports"
+    datasets_folder.mkdir()
+    (datasets_folder / "sample.csv").write_text(
+        "category,sales\nA,4\nB,9\n",
+        encoding="utf-8",
+    )
+    client.application.config.update(
+        DATASET_UPLOAD_FOLDER=str(datasets_folder),
+        REPORTS_FOLDER=str(reports_folder),
+    )
+
+    response = client.post(
+        "/api/reports/generate",
+        headers=auth_headers,
+        json={
+            "dataset_id": "sample",
+            "title": "Sample report",
+        },
+    )
+
+    assert response.status_code == 201
+    result = response.get_json()
+    assert result["report"]["report"]["summary"]["rows"] == 2
+    assert result["report"]["report"]["summary"]["numeric_summary"]["sales"]["sum"] == 13
 
 
 # ==========================================

@@ -133,9 +133,9 @@ def test_analysis_without_authentication(client):
     Analysis APIs should require authentication.
     """
 
-    response = client.get("/api/analysis")
+    response = client.get("/api/analysis/missing-dataset")
 
-    assert response.status_code in [401, 403, 404]
+    assert response.status_code == 401
 
 
 def test_get_analysis(client, auth_headers):
@@ -144,11 +144,11 @@ def test_get_analysis(client, auth_headers):
     """
 
     response = client.get(
-        "/api/analysis",
+        "/api/analysis/missing-dataset",
         headers=auth_headers,
     )
 
-    assert response.status_code in [200, 404]
+    assert response.status_code == 404
 
     if response.status_code == 200:
         data = response.get_json()
@@ -464,20 +464,17 @@ def test_invalid_analysis_type(client, auth_headers):
 # Empty Dataset Tests
 # ==========================================
 
-def test_empty_dataset_analysis(client, auth_headers):
+def test_unknown_dataset_analysis(client, auth_headers):
     """
     Test analysis with an empty dataset.
     """
 
-    response = client.post(
-        "/api/analysis/statistics",
+    response = client.get(
+        "/api/analysis/empty-dataset",
         headers=auth_headers,
-        json={
-            "data": []
-        },
     )
 
-    assert response.status_code in [200, 400, 422]
+    assert response.status_code == 404
 
 
 # ==========================================
@@ -527,16 +524,10 @@ def test_analysis_requires_valid_token(client):
     Test analysis endpoint with an invalid JWT.
     """
 
-    response = client.post(
-        "/api/analysis/statistics",
+    response = client.get(
+        "/api/analysis/missing-dataset",
         headers={
             "Authorization": "Bearer invalid-token"
-        },
-        json={
-            "data": [
-                {"sales": 100},
-                {"sales": 200}
-            ]
         },
     )
 
@@ -553,7 +544,7 @@ def test_analysis_api_available(client, auth_headers):
     """
 
     response = client.get(
-        "/api/analysis",
+        "/api/analysis/missing-dataset",
         headers=auth_headers,
     )
 

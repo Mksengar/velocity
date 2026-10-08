@@ -134,6 +134,10 @@ def create_app(config_name=None):
     def frontend_css(filename):
         return send_from_directory(PROJECT_ROOT / "frontend" / "CSS", filename)
 
+    @app.route("/analytics.html")
+    def analytics_page():
+        return send_from_directory(PROJECT_ROOT / "frontend", "eda.html")
+
     @app.route("/<path:filename>")
     def frontend_files(filename):
         return send_from_directory(PROJECT_ROOT / "frontend", filename)
@@ -147,7 +151,7 @@ def create_app(config_name=None):
                 "health": "/api/health",
                 "auth": "/api/auth",
                 "datasets": "/api/datasets",
-                "analytics": "/api/analytics",
+                "analytics": "/api/analysis",
                 "reports": "/api/reports"
             }
         })
@@ -220,6 +224,20 @@ def create_app(config_name=None):
     except ModuleNotFoundError:
         from backend.routes.dashboard import dashboard_bp
         app.register_blueprint(dashboard_bp)
+
+    try:
+        from routes.analysis import analysis_bp
+        app.register_blueprint(analysis_bp)
+    except ModuleNotFoundError:
+        from backend.routes.analysis import analysis_bp
+        app.register_blueprint(analysis_bp)
+
+    try:
+        from routes.reports import reports_bp
+        app.register_blueprint(reports_bp)
+    except ModuleNotFoundError:
+        from backend.routes.reports import reports_bp
+        app.register_blueprint(reports_bp)
 
     try:
         from routes.admin import admin_bp

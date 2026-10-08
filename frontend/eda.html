@@ -571,7 +571,7 @@
         </a>
 
 
-        <a href="analytics.html" class="nav-item">
+        <a href="eda.html" class="nav-item">
             <span class="icon">◉</span>
             <span>Analytics</span>
         </a>
@@ -665,16 +665,20 @@
                         sales_data.csv
                     </h3>
 
-                    <p>
+                    <p id="datasetSummary">
                         10 rows • 7 columns • Cleaned dataset
                     </p>
+
+                    <select class="select" id="datasetSelector" aria-label="Select dataset">
+                        <option value="">Loading datasets...</option>
+                    </select>
 
                 </div>
 
             </div>
 
 
-            <div class="quality-badge">
+            <div class="quality-badge" id="qualityBadge">
                 ● Data Quality 98%
             </div>
 
@@ -691,7 +695,7 @@
 
                 <p>TOTAL RECORDS</p>
 
-                <h2>
+                <h2 id="recordCount">
                     10
                 </h2>
 
@@ -706,7 +710,7 @@
 
                 <p>TOTAL COLUMNS</p>
 
-                <h2>
+                <h2 id="columnCount">
                     7
                 </h2>
 
@@ -721,7 +725,7 @@
 
                 <p>NUMERIC FEATURES</p>
 
-                <h2>
+                <h2 id="numericCount">
                     3
                 </h2>
 
@@ -736,7 +740,7 @@
 
                 <p>CATEGORICAL FEATURES</p>
 
-                <h2>
+                <h2 id="categoricalCount">
                     4
                 </h2>
 
@@ -749,14 +753,14 @@
 
             <div class="kpi-card">
 
-                <p>TOTAL SALES</p>
+                <p>MISSING VALUES</p>
 
-                <h2>
-                    ₹3.18L
+                <h2 id="missingValueCount">
+                    0
                 </h2>
 
                 <div class="kpi-change">
-                    Sample dataset
+                    Null cells
                 </div>
 
             </div>
@@ -940,7 +944,7 @@
 
                     <table>
 
-                        <thead>
+                        <thead id="correlationHead">
 
                             <tr>
 
@@ -965,7 +969,7 @@
                         </thead>
 
 
-                        <tbody>
+                        <tbody id="correlationBody">
 
                             <tr>
 
@@ -1101,7 +1105,7 @@
                         </thead>
 
 
-                        <tbody>
+                        <tbody id="descriptiveBody">
 
                             <tr>
 
@@ -1352,6 +1356,169 @@
             3
         ];
 
+        const API_BASE_URL = window.location.port === "5500"
+            ? "http://127.0.0.1:5000/api"
+            : `${window.location.origin}/api`;
+        let activeAnalysis = null;
+        let activePreviewRows = [];
+        let activeNumericColumns = [];
+
+        async function analysisApiRequest(endpoint) {
+            const token = localStorage.getItem("velocity_bi_token");
+
+            if (!token) {
+                window.location.href = "login.html";
+                throw new Error("Please sign in to analyze datasets.");
+            }
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = "login.html";
+                throw new Error("Your session has expired. Please sign in again.");
+            }
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(data.message || data.error || "Analysis request failed.");
+            }
+
+            return data;
+        }
+
+        async function loadDatasetOptions() {
+            const selector = document.getElementById("datasetSelector");
+
+            try {
+                const response = await analysisApiRequest("/datasets");
+                const datasets = response.datasets || [];
+                selector.replaceChildren();
+
+                if (!datasets.length) {
+                    selector.add(new Option("No datasets uploaded", ""));
+                    document.getElementById("datasetSummary").textContent =
+                        "Upload a dataset to begin analysis.";
+                    return;
+                }
+
+                datasets.forEach(dataset => {
+                    selector.add(new Option(dataset.filename, dataset.dataset_id));
+                });
+                await analyzeSelectedDataset();
+            } catch (error) {
+                selector.replaceChildren(new Option("Unable to load datasets", ""));
+                document.getElementById("datasetSummary").textContent = error.message;
+            }
+        }
+
+        async function analyzeSelectedDataset() {
+            const selector = document.getElementById("datasetSelector");
+            const datasetId = selector.value;
+            if (!datasetId) return;
+
+            try {
+                const encodedId = encodeURIComponent(datasetId);
+                const [analysis, descriptive, correlation, preview] = await Promise.all([
+                    analysisApiRequest(`/analysis/${encodedId}`),
+                    analysisApiRequest(`/analysis/${encodedId}/descriptive`),
+                    analysisApiRequest(`/analysis/${encodedId}/correlation`),
+                    analysisApiRequest(`/datasets/${encodedId}/preview?rows=100`)
+                ]);
+
+                activeAnalysis = analysis;
+                activePreviewRows = preview.data || [];
+                activeNumericColumns = analysis.numeric_columns || [];
+                document.getElementById("datasetName").textContent =
+                    selector.selectedOptions[0].textContent;
+                document.getElementById("datasetSummary").textContent =
+                    `${analysis.overview.rows} rows • ${analysis.overview.columns} columns`;
+                document.getElementById("recordCount").textContent = analysis.overview.rows;
+                document.getElementById("columnCount").textContent = analysis.overview.columns;
+                document.getElementById("numericCount").textContent = analysis.numeric_columns.length;
+                document.getElementById("categoricalCount").textContent =
+                    analysis.categorical_columns.length;
+                document.getElementById("missingValueCount").textContent =
+                    analysis.overview.total_missing_values;
+
+                const totalCells = analysis.overview.rows * analysis.overview.columns;
+                const quality = totalCells
+                    ? 100 * (1 - analysis.overview.total_missing_values / totalCells)
+                    : 100;
+                document.getElementById("qualityBadge").textContent =
+                    `● Data Quality ${quality.toFixed(1)}%`;
+
+                renderAnalysisTables(descriptive.statistics || {}, correlation.correlation || {});
+                populateDistributionOptions();
+                updateDistribution();
+            } catch (error) {
+                document.getElementById("datasetSummary").textContent = error.message;
+            }
+        }
+
+        function formatAnalysisNumber(value) {
+            const number = Number(value);
+            return Number.isFinite(number)
+                ? number.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                : "—";
+        }
+
+        function renderAnalysisTables(statistics, correlation) {
+            const descriptiveBody = document.getElementById("descriptiveBody");
+            descriptiveBody.replaceChildren(...Object.entries(statistics).map(([column, values]) => {
+                const row = document.createElement("tr");
+                [column, values.count, values.mean, values["50%"], values.min, values.max, values.std]
+                    .forEach(value => {
+                        const cell = document.createElement("td");
+                        cell.textContent = formatAnalysisNumber(value);
+                        row.appendChild(cell);
+                    });
+                return row;
+            }));
+
+            const columns = Object.keys(correlation);
+            const head = document.getElementById("correlationHead");
+            const body = document.getElementById("correlationBody");
+            const headerRow = document.createElement("tr");
+            ["Feature", ...columns].forEach(label => {
+                const cell = document.createElement("th");
+                cell.textContent = label;
+                headerRow.appendChild(cell);
+            });
+            head.replaceChildren(headerRow);
+
+            body.replaceChildren(...columns.map((column, rowIndex) => {
+                const row = document.createElement("tr");
+                const name = document.createElement("td");
+                name.textContent = column;
+                row.appendChild(name);
+                columns.forEach(otherColumn => {
+                    const cell = document.createElement("td");
+                    cell.textContent = formatAnalysisNumber(
+                        correlation[otherColumn]?.[rowIndex]
+                    );
+                    row.appendChild(cell);
+                });
+                return row;
+            }));
+        }
+
+        function populateDistributionOptions() {
+            const selector = document.getElementById("distributionSelect");
+            selector.replaceChildren();
+            activeNumericColumns.forEach((column, index) => {
+                selector.add(new Option(column, column));
+                if (index === 0) selector.value = column;
+            });
+            if (!activeNumericColumns.length) {
+                selector.add(new Option("No numeric columns", ""));
+                selector.disabled = true;
+            } else {
+                selector.disabled = false;
+            }
+        }
+
 
         /* ================= COMMON CHART OPTIONS ================= */
 
@@ -1461,42 +1628,11 @@
 
 
         function updateDistribution() {
-
-            const selected =
-                document
-                .getElementById(
-                    "distributionSelect"
-                )
-                .value;
-
-
-            if (selected === "sales") {
-
-                createDistributionChart(
-                    salesData,
-                    "Sales"
-                );
-
-            }
-
-            else if (selected === "price") {
-
-                createDistributionChart(
-                    priceData,
-                    "Price"
-                );
-
-            }
-
-            else {
-
-                createDistributionChart(
-                    quantityData,
-                    "Quantity"
-                );
-
-            }
-
+            const selected = document.getElementById("distributionSelect").value;
+            const values = activePreviewRows
+                .map(row => Number(row[selected]))
+                .filter(Number.isFinite);
+            createDistributionChart(values, selected || "No numeric data");
         }
 
 
@@ -1681,70 +1817,24 @@
         /* ================= GENERATE INSIGHTS ================= */
 
         function generateInsights() {
-
             const container =
                 document.getElementById(
                     "insights"
                 );
 
+            if (!activeAnalysis) {
+                return;
+            }
 
-            container.innerHTML = `
-
-                <div class="insight">
-
-                    <div class="insight-icon">
-                        ✓
-                    </div>
-
-                    <h4>
-                        Dataset Successfully Analyzed
-                    </h4>
-
-                    <p>
-                        Velocity BI analyzed the available
-                        numerical and categorical variables.
-                    </p>
-
-                </div>
-
-
-                <div class="insight">
-
-                    <div class="insight-icon">
-                        📊
-                    </div>
-
-                    <h4>
-                        Sales Pattern Detected
-                    </h4>
-
-                    <p>
-                        The dataset contains noticeable
-                        variation in sales across products.
-                    </p>
-
-                </div>
-
-
-                <div class="insight">
-
-                    <div class="insight-icon">
-                        🔎
-                    </div>
-
-                    <h4>
-                        Further Analysis Recommended
-                    </h4>
-
-                    <p>
-                        More records can improve the reliability
-                        of statistical patterns and correlations.
-                    </p>
-
-                </div>
-
-            `;
-
+            const overview = activeAnalysis.overview;
+            const messages = [
+                `Dataset analyzed: ${overview.rows} rows and ${overview.columns} columns.`,
+                `${overview.total_missing_values} missing values across the dataset.`,
+                `${overview.duplicate_rows} duplicate rows detected.`
+            ];
+            container.querySelectorAll(".insight p").forEach((paragraph, index) => {
+                paragraph.textContent = messages[index];
+            });
         }
 
 
@@ -1783,6 +1873,11 @@
         loadDatasetName();
 
         createDistributionChart();
+
+        document.getElementById("datasetSelector")
+            .addEventListener("change", analyzeSelectedDataset);
+
+        loadDatasetOptions();
 
     </script>
 

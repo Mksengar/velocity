@@ -598,23 +598,7 @@
                     </label>
 
                     <select id="dataset">
-
-                        <option>
-                            Sales Dataset
-                        </option>
-
-                        <option>
-                            Customer Dataset
-                        </option>
-
-                        <option>
-                            Revenue Dataset
-                        </option>
-
-                        <option>
-                            Marketing Dataset
-                        </option>
-
+                        <option value="">Loading datasets...</option>
                     </select>
 
                 </div>
@@ -730,7 +714,7 @@
 
                     <div class="summary-card">
 
-                        <div class="label">
+                        <div class="label" id="totalMetricLabel">
                             Total Sales
                         </div>
 
@@ -747,7 +731,7 @@
 
                     <div class="summary-card">
 
-                        <div class="label">
+                        <div class="label" id="averageMetricLabel">
                             Average Sales
                         </div>
 
@@ -889,7 +873,7 @@
                     </p>
 
 
-                    <div class="insights">
+                    <div class="insights" id="insightsContainer">
 
 
                         <div class="insight">
@@ -1076,7 +1060,7 @@
                                 Total Records
                             </div>
 
-                            <div class="value">
+                            <div class="value" id="qualityRecords">
                                 12
                             </div>
 
@@ -1089,7 +1073,7 @@
                                 Missing Values
                             </div>
 
-                            <div class="value green">
+                            <div class="value green" id="missingValues">
                                 0
                             </div>
 
@@ -1102,7 +1086,7 @@
                                 Duplicate Rows
                             </div>
 
-                            <div class="value green">
+                            <div class="value green" id="duplicateRows">
                                 0
                             </div>
 
@@ -1115,7 +1099,7 @@
                                 Data Quality
                             </div>
 
-                            <div class="value yellow">
+                            <div class="value yellow" id="qualityScore">
                                 100%
                             </div>
 
@@ -1188,6 +1172,73 @@
 
         let salesChart;
         let distributionChart;
+        let activeMetric = "Sales";
+
+        const API_BASE_URL = window.location.port === "5500"
+            ? "http://127.0.0.1:5000/api"
+            : `${window.location.origin}/api`;
+
+        function getAuthToken() {
+            return localStorage.getItem("velocity_bi_token");
+        }
+
+        async function reportsApiRequest(endpoint, options = {}) {
+            const token = getAuthToken();
+
+            if (!token) {
+                window.location.href = "login.html";
+                throw new Error("Please sign in to access reports.");
+            }
+
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                    ...(options.headers || {})
+                }
+            });
+
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = "login.html";
+                throw new Error("Your session has expired. Please sign in again.");
+            }
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(data.message || data.error || "The request failed.");
+            }
+
+            return data;
+        }
+
+        async function loadDatasets() {
+            const select = document.getElementById("dataset");
+
+            try {
+                const data = await reportsApiRequest("/datasets");
+                const datasets = data.datasets || [];
+                select.replaceChildren();
+
+                if (!datasets.length) {
+                    select.add(new Option("No datasets uploaded", ""));
+                    document.getElementById("status").textContent =
+                        "Upload a dataset before generating a report.";
+                    document.getElementById("status").style.display = "block";
+                    return;
+                }
+
+                datasets.forEach(dataset => {
+                    select.add(new Option(dataset.filename, dataset.dataset_id));
+                });
+
+                document.getElementById("status").style.display = "none";
+            } catch (error) {
+                select.replaceChildren(new Option("Unable to load datasets", ""));
+                document.getElementById("status").textContent = error.message;
+                document.getElementById("status").style.display = "block";
+            }
+        }
 
 
         /* ================= FORMAT ================= */
@@ -1231,7 +1282,7 @@
 
                         datasets: [{
 
-                            label: "Sales",
+                            label: activeMetric,
 
                             data: salesData,
 
@@ -1347,21 +1398,11 @@
 
                     data: {
 
-                        labels: [
-                            "Product A",
-                            "Product B",
-                            "Product C",
-                            "Product D"
-                        ],
+                        labels: months,
 
                         datasets: [{
 
-                            data: [
-                                35,
-                                28,
-                                22,
-                                15
-                            ],
+                            data: salesData,
 
                             borderWidth: 1
 
@@ -1399,62 +1440,114 @@
 
         /* ================= GENERATE REPORT ================= */
 
-        function generateReport() {
+        async function generateReport() {
+            const status = document.getElementById("status");
+            const select = document.getElementById("dataset");
+            const datasetId = select.value;
+            const datasetName = select.selectedOptions[0]?.textContent || "Dataset";
+            const reportType = document.getElementById("reportType").value;
 
-            const status =
-                document.getElementById(
-                    "status"
-                );
+            if (!datasetId) {
+                status.textContent = "Select an uploaded dataset first.";
+                status.style.display = "block";
+                return;
+            }
 
+            status.textContent = "Generating report...";
+            status.style.display = "block";
 
-            status.style.display =
-                "block";
+            try {
+                const data = await reportsApiRequest("/reports/generate", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        dataset_id: datasetId,
+                        title: getReportName(reportType),
+                        description: `${datasetName} business intelligence analysis`
+                    })
+                });
 
+                renderGeneratedReport(data.report, datasetName, reportType);
+                status.style.display = "none";
+            } catch (error) {
+                status.textContent = error.message;
+                status.style.display = "block";
+            }
+        }
 
-            setTimeout(() => {
+        function renderGeneratedReport(savedReport, datasetName, reportType) {
+            const report = savedReport.report;
+            const summary = report.summary;
+            const metricEntry = Object.entries(summary.numeric_summary || {})[0];
+            const metricName = metricEntry ? metricEntry[0] : "Records";
+            const metricSummary = metricEntry ? metricEntry[1] : null;
+            const preview = report.preview || [];
+            const values = metricEntry
+                ? preview.map(row => Number(row[metricName])).filter(Number.isFinite)
+                : preview.map(() => 1);
 
-                const dataset =
-                    document.getElementById(
-                        "dataset"
-                    ).value;
+            activeMetric = metricName;
+            months.splice(0, months.length, ...values.map((_, index) => `Row ${index + 1}`));
+            salesData.splice(0, salesData.length, ...values);
 
+            document.getElementById("reportTitle").textContent =
+                `Velocity BI — ${getReportName(reportType)}`;
+            document.getElementById("reportSubtitle").textContent =
+                `${datasetName} | ${summary.rows} rows, ${summary.columns} columns`;
+            document.getElementById("reportDate").textContent =
+                `Generated: ${new Date(savedReport.created_at).toLocaleString()}`;
+            document.getElementById("totalMetricLabel").textContent = `Total ${metricName}`;
+            document.getElementById("averageMetricLabel").textContent = `Average ${metricName}`;
+            document.getElementById("totalSales").textContent =
+                formatCurrency(metricSummary?.sum ?? summary.rows);
+            document.getElementById("averageSales").textContent =
+                formatCurrency(metricSummary?.average ?? 1);
+            document.getElementById("records").textContent = summary.rows;
 
-                const reportType =
-                    document.getElementById(
-                        "reportType"
-                    ).value;
+            const first = values[0] || 0;
+            const last = values[values.length - 1] || 0;
+            const growth = first ? ((last - first) / Math.abs(first)) * 100 : 0;
+            document.getElementById("growth").textContent =
+                `${growth >= 0 ? "+" : ""}${growth.toFixed(1)}%`;
+            document.getElementById("summaryText").textContent = metricSummary
+                ? `${metricName} ranges from ${formatCurrency(metricSummary.minimum)} to ${formatCurrency(metricSummary.maximum)} across ${summary.rows} records.`
+                : `The selected dataset contains ${summary.rows} records and ${summary.columns} columns, with no numeric columns to summarize.`;
 
+            document.getElementById("qualityRecords").textContent = summary.rows;
+            document.getElementById("missingValues").textContent = summary.missing_values;
+            document.getElementById("duplicateRows").textContent = summary.duplicate_rows;
+            const totalCells = summary.rows * summary.columns;
+            const quality = totalCells
+                ? Math.max(0, 100 * (1 - summary.missing_values / totalCells))
+                : 100;
+            document.getElementById("qualityScore").textContent = `${quality.toFixed(1)}%`;
 
-                document.getElementById(
-                    "reportTitle"
-                ).textContent =
-                    "Velocity BI — " +
-                    getReportName(
-                        reportType
-                    );
+            const insightItems = document.querySelectorAll("#insightsContainer .insight");
+            const insightContent = [
+                ["Dataset analyzed", `${summary.rows} rows across ${summary.columns} columns.`],
+                ["Missing values", `${summary.missing_values} missing values were found.`],
+                ["Duplicate rows", `${summary.duplicate_rows} duplicate rows were found.`],
+                [metricName, metricSummary
+                    ? `Average ${metricName}: ${formatCurrency(metricSummary.average)}.`
+                    : "No numeric columns are available for numeric analysis."]
+            ];
+            insightItems.forEach((item, index) => {
+                item.querySelector("h4").textContent = insightContent[index][0];
+                item.querySelector("p").textContent = insightContent[index][1];
+            });
 
+            const table = document.getElementById("forecastTable");
+            table.replaceChildren(...values.slice(0, 10).map((value, index) => {
+                const row = document.createElement("tr");
+                [months[index], formatCurrency(value), "—", "—", "—"].forEach(text => {
+                    const cell = document.createElement("td");
+                    cell.textContent = text;
+                    row.appendChild(cell);
+                });
+                return row;
+            }));
 
-                document.getElementById(
-                    "reportSubtitle"
-                ).textContent =
-                    dataset +
-                    " | Business Intelligence Analysis";
-
-
-                updateStatistics();
-
-
-                createSalesChart();
-
-                createDistributionChart();
-
-
-                status.style.display =
-                    "none";
-
-
-            }, 600);
-
+            createSalesChart();
+            createDistributionChart();
         }
 
 
@@ -1561,17 +1654,13 @@
         function downloadCSV() {
 
             let csv =
-                "Month,Sales\n";
+                `Record,${activeMetric}\n`;
 
 
             months.forEach(
                 (month, index) => {
 
-                    csv +=
-                        month +
-                        "," +
-                        salesData[index] +
-                        "\n";
+                    csv += `${month},${salesData[index]}\n`;
 
                 }
             );
@@ -1623,6 +1712,8 @@
                 createDistributionChart();
 
                 updateStatistics();
+
+                loadDatasets();
 
             };
 

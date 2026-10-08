@@ -18,6 +18,7 @@ from flask import (
     current_app,
     send_file
 )
+from flask_jwt_extended import verify_jwt_in_request
 
 
 # ==========================================
@@ -29,6 +30,11 @@ reports_bp = Blueprint(
     __name__,
     url_prefix="/api/reports"
 )
+
+
+@reports_bp.before_request
+def require_reports_authentication():
+    verify_jwt_in_request()
 
 
 # ==========================================
@@ -132,7 +138,7 @@ def get_reports_folder():
         folder = os.path.join(
             current_app.root_path,
             "uploads",
-            "reports"
+            "reports_data"
         )
 
     os.makedirs(folder, exist_ok=True)

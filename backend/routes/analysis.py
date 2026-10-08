@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from flask import Blueprint, request, jsonify, current_app
+from flask_jwt_extended import verify_jwt_in_request
 
 
 # -------------------------------------------------
@@ -19,6 +20,11 @@ analysis_bp = Blueprint(
     __name__,
     url_prefix="/api/analysis"
 )
+
+
+@analysis_bp.before_request
+def require_analysis_authentication():
+    verify_jwt_in_request()
 
 
 # -------------------------------------------------

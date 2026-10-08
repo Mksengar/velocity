@@ -34,8 +34,8 @@ const CONFIG = {
         },
 
         ANALYTICS: {
-            EDA: "/analytics/eda",
-            CORRELATION: "/analytics/correlation",
+            EDA: "/analysis",
+            CORRELATION: "/analysis",
             CLEANING: "/analytics/cleaning"
         },
 
@@ -46,8 +46,8 @@ const CONFIG = {
 
         REPORTS: {
             LIST: "/reports",
-            CREATE: "/reports/create",
-            EXPORT: "/reports/export"
+            CREATE: "/reports/generate",
+            EXPORT: "/reports/{report_id}/export/{format}"
         },
 
         FORECASTING: {

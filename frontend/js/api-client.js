@@ -621,12 +621,8 @@ class APIClient {
         datasetId
     ) {
 
-        return this.post(
-            "/analytics/eda",
-            {
-                dataset_id:
-                    datasetId
-            }
+        return this.get(
+            `/analysis/${encodeURIComponent(datasetId)}`
         );
     }
 
@@ -639,12 +635,8 @@ class APIClient {
         datasetId
     ) {
 
-        return this.post(
-            "/analytics/correlation",
-            {
-                dataset_id:
-                    datasetId
-            }
+        return this.get(
+            `/analysis/${encodeURIComponent(datasetId)}/correlation`
         );
     }
 
@@ -722,7 +714,7 @@ class APIClient {
     ) {
 
         return this.post(
-            "/reports/create",
+            "/reports/generate",
             reportData
         );
     }
@@ -730,17 +722,15 @@ class APIClient {
 
     async exportReport(
         reportId,
-        format = "pdf"
+        format = "json"
     ) {
+        const exportFormat = String(format).toLowerCase();
+        if (!["json", "csv"].includes(exportFormat)) {
+            throw new Error("Report export format must be json or csv.");
+        }
 
-        return this.post(
-            "/reports/export",
-            {
-                report_id:
-                    reportId,
-                format:
-                    format
-            }
+        return this.get(
+            `/reports/${encodeURIComponent(reportId)}/export/${exportFormat}`
         );
     }
 
