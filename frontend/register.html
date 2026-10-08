@@ -1028,11 +1028,10 @@
                  * Flask endpoint:
                  *
                  * POST
-                 * http://127.0.0.1:5000/api/auth/register
+                 * /api/auth/register
                  */
 
-                const API_URL =
-                    "http://127.0.0.1:5000/api/auth/register";
+                const API_URL = `${window.location.port === "5500" ? "http://127.0.0.1:5000" : window.location.origin}/api/auth/register`;
 
 
                 const response =

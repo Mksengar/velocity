@@ -1,5 +1,21 @@
 [
     {
+        "activity_id": "d3159149-f3d9-4401-824a-9436977982f5",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-22T18:53:22.451484Z"
+    },
+    {
+        "activity_id": "3e470b0c-7d46-429d-ac10-c67a8160946c",
+        "action": "ADMIN_LOGIN",
+        "description": "Administrator logged in",
+        "user_id": null,
+        "admin_id": "admin",
+        "timestamp": "2026-09-20T19:31:42.759605Z"
+    },
+    {
         "activity_id": "101e1fd1-da3c-4531-8174-97937351f536",
         "action": "ADMIN_LOGIN",
         "description": "Administrator logged in",

@@ -47,8 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // API Configuration
     // ------------------------------------------
 
-    const API_BASE_URL =
-        "http://127.0.0.1:5000/api";
+    const API_BASE_URL = window.location.port === "5500"
+        ? "http://127.0.0.1:5000/api"
+        : `${window.location.origin}/api`;
 
 
     // ------------------------------------------

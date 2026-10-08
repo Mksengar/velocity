@@ -123,6 +123,36 @@ def test_api_root(client):
     ]
 
 
+def test_frontend_homepage_is_served(client):
+    response = client.get("/", headers={"Accept": "text/html"})
+
+    assert response.status_code == 200
+    assert response.mimetype == "text/html"
+
+
+def test_root_json_status_is_preserved(client):
+    response = client.get("/", headers={"Accept": "application/json"})
+
+    assert response.status_code == 200
+    assert response.get_json()["message"] == "Velocity BI Backend is running"
+
+
+def test_frontend_assets_are_served(client):
+    css_response = client.get("/css/main.css")
+    js_response = client.get("/js/config.js")
+
+    assert css_response.status_code == 200
+    assert js_response.status_code == 200
+
+
+def test_production_requires_secrets_and_database(monkeypatch):
+    for name in ("SECRET_KEY", "JWT_SECRET_KEY", "DATABASE_URL"):
+        monkeypatch.delenv(name, raising=False)
+
+    with pytest.raises(RuntimeError, match="SECRET_KEY.*JWT_SECRET_KEY.*DATABASE_URL"):
+        create_app("production")
+
+
 def test_api_response_is_json(client):
     """
     Test that API responses can return JSON.

@@ -1,4 +1,3 @@
-```javascript
 // ==========================================
 // Velocity BI - API Client
 // File: frontend/js/api-client.js
@@ -10,7 +9,9 @@ class APIClient {
         this.baseURL =
             typeof CONFIG !== "undefined"
                 ? CONFIG.API_BASE_URL
-                : "http://127.0.0.1:5000/api";
+                : (window.location.port === "5500"
+                    ? "http://127.0.0.1:5000/api"
+                    : window.location.origin + "/api");
 
         this.timeout = 30000;
     }
@@ -843,4 +844,3 @@ async function apiUpload(
         data
     );
 }
-```

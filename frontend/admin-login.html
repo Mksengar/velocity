@@ -821,7 +821,7 @@
 
                 try {
                     const response = await fetch(
-                        "http://127.0.0.1:5000/api/admin/login",
+                        `${window.location.port === "5500" ? "http://127.0.0.1:5000" : window.location.origin}/api/admin/login`,
                         {
                             method: "POST",
                             headers: {

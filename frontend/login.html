@@ -760,8 +760,7 @@
              * runs on another host or port.
              */
 
-            const API_URL =
-                "http://127.0.0.1:5000/api/auth/login";
+            const API_URL = `${window.location.port === "5500" ? "http://127.0.0.1:5000" : window.location.origin}/api/auth/login`;
 
 
             const response = await fetch(API_URL, {

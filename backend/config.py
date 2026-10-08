@@ -47,13 +47,11 @@ class Config:
     # --------------------------------------------------------
 
     SECRET_KEY = get_env(
-        "SECRET_KEY",
-        "change-this-secret-key-in-production"
+        "SECRET_KEY"
     )
 
     JWT_SECRET_KEY = get_env(
-        "JWT_SECRET_KEY",
-        "change-this-jwt-secret-key-in-production"
+        "JWT_SECRET_KEY"
     )
 
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(
@@ -82,39 +80,26 @@ class Config:
 
     DATABASE_TYPE = get_env(
         "DATABASE_TYPE",
-        "mysql"
+        "sqlite"
     )
 
-    DB_HOST = get_env(
-        "DB_HOST",
-        "localhost"
-    )
+    DB_HOST = get_env("DB_HOST")
 
     DB_PORT = int(get_env(
         "DB_PORT",
         "3306"
     ))
 
-    DB_NAME = get_env(
-        "DB_NAME",
-        "velocity_bi"
-    )
+    DB_NAME = get_env("DB_NAME")
 
-    DB_USER = get_env(
-        "DB_USER",
-        "root"
-    )
+    DB_USER = get_env("DB_USER")
 
-    DB_PASSWORD = get_env(
-        "DB_PASSWORD",
-        ""
-    )
+    DB_PASSWORD = get_env("DB_PASSWORD")
 
     # SQLAlchemy connection URL
     SQLALCHEMY_DATABASE_URI = get_env(
         "DATABASE_URL",
-        f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}"
-        f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+        "sqlite:///velocity_bi.db"
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False

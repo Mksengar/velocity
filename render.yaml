@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: velocity-bi
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: velocity-bi-db
+          property: connectionString
+
+databases:
+  - name: velocity-bi-db
+    databaseName: velocity_bi
+    user: velocity_bi_user
+    plan: free
+    region: oregon
